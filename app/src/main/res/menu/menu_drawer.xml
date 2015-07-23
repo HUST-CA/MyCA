@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_event_note_black_48dp"
+        android:title="@string/recent_activities" />
+    <item
+        android:icon="@drawable/ic_public_black_48dp"
+        android:title="@string/news" />
+    <item
+        android:icon="@drawable/ic_book_black_48dp"
+        android:title="@string/history" />
+    <item
+        android:icon="@drawable/ic_local_drink_black_48dp"
+        android:title="@string/h2o_world" />
+</menu>

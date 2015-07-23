@@ -3,4 +3,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="recent_activities">Recent Activities</string>
+    <string name="news">News</string>
+    <string name="history">History</string>
+    <string name="h2o_world">SPAM!</string>
 </resources>

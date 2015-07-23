@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyCA</string>
+    <string name="action_settings">设置</string>
+    <string name="h2o_world">大水缸</string>
+    <string name="hello_world">Fuck</string>
+    <string name="history">史册</string>
+    <string name="news">消息</string>
+    <string name="recent_activities">最近活动</string>
+</resources>
