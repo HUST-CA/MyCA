@@ -7,4 +7,7 @@
     <string name="news">News</string>
     <string name="history">History</string>
     <string name="h2o_world">SPAM!</string>
+    <string name="switch_assoc">Switch Association</string>
+    <string name="about">About</string>
+    <string name="drawer_submenu_title">MORE</string>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
     <item
         android:icon="@drawable/ic_event_note_black_48dp"
         android:title="@string/recent_activities" />
@@ -12,4 +13,13 @@
     <item
         android:icon="@drawable/ic_local_drink_black_48dp"
         android:title="@string/h2o_world" />
+    </group>
+
+    <item android:title="@string/drawer_submenu_title">
+        <menu>
+            <item android:title="@string/action_settings"/>
+            <item android:title="@string/switch_assoc"/>
+            <item android:title="@string/about"/>
+        </menu>
+    </item>
 </menu>

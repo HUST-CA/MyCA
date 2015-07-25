@@ -7,4 +7,7 @@
     <string name="history">史册</string>
     <string name="news">消息</string>
     <string name="recent_activities">最近活动</string>
+    <string name="switch_assoc">切换组织</string>
+    <string name="about">关于</string>
+    <string name="drawer_submenu_title">更多</string>
 </resources>
