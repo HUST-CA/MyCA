@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="drawer_avatar_size">125dp</dimen>
+    <dimen name="drawer_header_image_text_spacing">8dp</dimen>
+    <dimen name="drawer_header_text_text_spacing">4dp</dimen>
 </resources>
