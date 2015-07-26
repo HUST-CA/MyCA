@@ -18,6 +18,15 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+        <!-- Container for a fragment -->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_to_refresh_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar">
+
+        </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView

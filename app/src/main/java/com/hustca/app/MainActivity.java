@@ -1,13 +1,20 @@
 package com.hustca.app;
 
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RefreshStoppable {
+
+    private static final String LOG_TAG = "MyCA_MA";
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +24,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar mToolbar;
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh_container);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mCurrentFragment != null && mCurrentFragment instanceof Refreshable) {
+                    ((Refreshable) mCurrentFragment).refresh();
+                } else {
+                    Log.e(LOG_TAG, "SwipeToRefresh: current fragment does not exist or can not refresh.");
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -39,5 +64,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefreshStopped() {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(false);
     }
 }
