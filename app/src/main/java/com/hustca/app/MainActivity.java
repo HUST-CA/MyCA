@@ -1,6 +1,7 @@
 package com.hustca.app;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.hustca.app.fragments.RecentActivitiesFragment;
 
-public class MainActivity extends AppCompatActivity implements RefreshStoppable {
+
+public class MainActivity extends AppCompatActivity implements RefreshIndicator {
 
     private static final String LOG_TAG = "MyCA_MA";
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -39,9 +42,20 @@ public class MainActivity extends AppCompatActivity implements RefreshStoppable 
 
     }
 
+    private void switchToFragment(Fragment newFragment) {
+        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+        if (mCurrentFragment != null)
+            ft.replace(R.id.swipe_to_refresh_container, newFragment);
+        else
+            ft.add(R.id.swipe_to_refresh_container, newFragment);
+        ft.commit();
+        mCurrentFragment = newFragment;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        switchToFragment(new RecentActivitiesFragment());
     }
 
     @Override
@@ -70,5 +84,11 @@ public class MainActivity extends AppCompatActivity implements RefreshStoppable 
     public void onRefreshStopped() {
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefreshStarted() {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(true);
     }
 }
