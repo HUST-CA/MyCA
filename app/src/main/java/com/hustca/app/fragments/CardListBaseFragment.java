@@ -14,6 +14,8 @@ import com.hustca.app.R;
  * Created by Hamster on 2015/7/27.
  * <p/>
  * Base template for a fragment which contains a list of cards
+ * Contains a list view and its adapter. The adapter is
+ * exported as protected member.
  */
 public class CardListBaseFragment extends Fragment {
 

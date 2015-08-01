@@ -47,6 +47,13 @@ public class MainActivity extends AppCompatActivity implements RefreshIndicator 
         setNavigationMenuListener();
     }
 
+    /**
+     * Switch current fragment in container (a FrameLayout) to specific one.
+     * If current fragment is the same as the wanted, do not perform any operation.
+     * Not even new Fragment().
+     *
+     * @param fragmentType Type of fragment to switch to.
+     */
     private void switchToFragment(FragmentType fragmentType) {
         // Don't reload/new the same fragment
         Fragment newFragment;
