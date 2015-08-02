@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,11 +15,11 @@ import com.hustca.app.fragments.NewsFragment;
 import com.hustca.app.fragments.RecentActivitiesFragment;
 
 
-public class MainActivity extends AppCompatActivity implements RefreshIndicator {
+public class MainActivity extends AppCompatActivity {
 
 
     private static final String LOG_TAG = "MyCA_MA";
-    SwipeRefreshLayout mSwipeRefreshLayout;
+
     Fragment mCurrentFragment;
 
     @Override
@@ -32,17 +31,6 @@ public class MainActivity extends AppCompatActivity implements RefreshIndicator 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh_container);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (mCurrentFragment != null && mCurrentFragment instanceof Refreshable) {
-                    ((Refreshable) mCurrentFragment).refresh();
-                } else {
-                    Log.e(LOG_TAG, "SwipeToRefresh: current fragment does not exist or can not refresh.");
-                }
-            }
-        });
 
         setNavigationMenuListener();
     }
@@ -86,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements RefreshIndicator 
         }
 
         // Do the real transaction
-        onRefreshStopped(); // Stop any refreshing indicator
         FragmentTransaction ft = this.getFragmentManager().beginTransaction();
         if (mCurrentFragment != null)
             ft.replace(R.id.fragment_container, newFragment);
@@ -124,18 +111,6 @@ public class MainActivity extends AppCompatActivity implements RefreshIndicator 
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onRefreshStopped() {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onRefreshStarted() {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(true);
     }
 
     private void setNavigationMenuListener() {
