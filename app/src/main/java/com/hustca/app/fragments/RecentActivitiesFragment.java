@@ -1,5 +1,8 @@
 package com.hustca.app.fragments;
 
+import android.os.Bundle;
+import android.view.View;
+
 import com.hustca.app.Article;
 import com.hustca.app.RefreshIndicator;
 import com.hustca.app.Refreshable;
@@ -27,4 +30,9 @@ public class RecentActivitiesFragment extends CardListBaseFragment implements Re
             ((RefreshIndicator) getActivity()).onRefreshStopped();
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        refresh();
+    }
 }

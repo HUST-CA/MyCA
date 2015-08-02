@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements RefreshIndicator 
     public void onResume() {
         super.onResume();
         // Default fragment to show on boot
+        // Remember to set checked property in XML if you want to change this
         switchToFragment(FragmentType.FRAGMENT_RECENT_ACTIVITIES);
     }
 

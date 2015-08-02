@@ -3,6 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_recent_act"
+            android:checked="true"
             android:icon="@drawable/ic_event_note_black_48dp"
             android:title="@string/recent_activities" />
         <item
