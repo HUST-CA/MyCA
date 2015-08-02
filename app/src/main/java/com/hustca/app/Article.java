@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * Created by Hamster on 2015/7/27.
  * <p/>
  * A class representing an article (any piece of text here).
- * News/History
+ * Supported types: see the code of {@link com.hustca.app.Article.ArticleType}
  */
 public class Article {
     /**
@@ -37,6 +37,11 @@ public class Article {
      * TODO Remove this. Load with ArticleUtil
      */
     private String mContent;
+
+    /**
+     * URL of cover picture. Should be specified by server side.
+     */
+    private String mCoverURL;
 
     /*
      * Countless getters
@@ -95,6 +100,14 @@ public class Article {
 
     public void setContent(String mContent) {
         this.mContent = mContent;
+    }
+
+    public String getCoverURL() {
+        return mCoverURL;
+    }
+
+    public void setCoverURL(String mCoverURL) {
+        this.mCoverURL = mCoverURL;
     }
 
     public void initArticleWithJSON(JSONObject json) {

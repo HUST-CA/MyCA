@@ -16,7 +16,11 @@ import java.util.Collections;
  * Created by Hamster on 2015/7/27.
  * <p/>
  * An adapter for list of cards (only articles).
- * Used in History/News/RecentActActivity
+ * <br/>
+ * Used in History/News/RecentActActivity.
+ * <br/>
+ * <strong>ATTENTION! </strong> Data should be sorted time-descending.
+ * mArticles[0] should be the latest one.
  */
 public class ArticleCardListAdapter extends BaseAdapter {
 
@@ -91,11 +95,11 @@ public class ArticleCardListAdapter extends BaseAdapter {
     }
 
     /**
-     * Add one entry
+     * Add one entry to the beginning. Use when the latest info comes.
      * Remember to notifyDataSetChanged()
      */
     public void add(Article article) {
-        mArticles.add(article);
+        mArticles.add(0, article);
     }
 
     /**
