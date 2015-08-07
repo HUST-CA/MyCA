@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hustca.app.util.AsyncImageGetter;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,10 +72,12 @@ public class ArticleCardListAdapter extends BaseAdapter {
         Article article = mArticles.get(position);
         holder.titleText.setText(article.getTitle());
         holder.summaryText.setText(article.getSummary());
-        // TODO load imge (using cache) holder.imageView
         holder.imageView.setImageResource(R.mipmap.ic_launcher);
         holder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
                 article.getPublishTime()));
+
+        AsyncImageGetter getter = new AsyncImageGetter(holder.imageView);
+        getter.loadForImageView(article.getCoverURL());
 
         return convertView;
     }
