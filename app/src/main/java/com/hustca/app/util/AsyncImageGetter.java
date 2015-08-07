@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hustca.app.R;
@@ -24,6 +26,7 @@ import java.net.URL;
  * Created by Hamster on 2015/8/7.
  * <p/>
  * Async image getter. Used in TextView.setText(Html.fromHtml(...,imageGetter,...));
+ * Can also be used with ImageView. But you can not refresh them both.
  */
 public class AsyncImageGetter implements Html.ImageGetter {
     private static final String LOG_TAG = "MyCA_AsyncIMG";
@@ -33,11 +36,30 @@ public class AsyncImageGetter implements Html.ImageGetter {
      * Associated TextView. Used to requestLayout() after finishing.
      */
     private TextView mTextView;
+    /**
+     * Support ImageView as well.
+     */
+    private ImageView mImageView;
 
+    /**
+     * Set the associated controls. When drawable is ready, these controls will be refreshed.
+     *
+     * @param tv TextView containing HTML
+     */
     AsyncImageGetter(TextView tv) {
         mTextView = tv;
+        mImageView = null;
     }
 
+    AsyncImageGetter(ImageView iv) {
+        mImageView = iv;
+        mTextView = null;
+    }
+
+    /**
+     * Only used in Html.fromHTML(...,imgGetter,...)
+     * If you want to load images for ImageView, see setUpForImageView
+     */
     @Override
     @SuppressWarnings("deprecation")
     public Drawable getDrawable(String source) {
@@ -46,26 +68,46 @@ public class AsyncImageGetter implements Html.ImageGetter {
         consistentDrawable.mDrawable = new BitmapDrawable(mTextView.getResources(),
                 ((BitmapDrawable) mTextView.getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap());
 
-        AsyncLoader loader = new AsyncLoader(mTextView, consistentDrawable);
+        /* Only used in TextView so ImageView is null here */
+        AsyncLoader loader = new AsyncLoader(mTextView, null, consistentDrawable);
         loader.execute(source);
         return consistentDrawable;
     }
 
     /**
+     * Load picture for ImageView
+     *
+     * @param source URL
+     */
+    public void loadForImageView(String source) {
+        AsyncLoader loader = new AsyncLoader(null, mImageView, null);
+        loader.execute(source);
+    }
+
+    /**
      * This class will download the pic to local storage.
      * After downloading, it will replace the drawable in {@link BitmapDrawableContainer}
-     * and refresh the corresponding TextView.
+     * and refresh the corresponding TextView/ImageView.
      * If the pic can be found in local cache, do not load and return directly.
      */
     private class AsyncLoader extends AsyncTask<String, Void, Drawable> {
         private Context mContext; // from mTextView
         private TextView mTextView;
+        private ImageView mImageView;
         private BitmapDrawableContainer mReplacingDrawable;
 
-        AsyncLoader(TextView textView, BitmapDrawableContainer replacingDrawable) {
+        AsyncLoader(@Nullable TextView textView, @Nullable ImageView imageView,
+                    @Nullable BitmapDrawableContainer replacingDrawable) {
             this.mTextView = textView;
-            mContext = mTextView.getContext();
-            mReplacingDrawable = replacingDrawable;
+            this.mImageView = imageView;
+            if (mTextView != null) {
+                mContext = mTextView.getContext();
+                mReplacingDrawable = replacingDrawable;
+            } else if (mImageView != null) {
+                mContext = mImageView.getContext();
+            } else {
+                Log.wtf(LOG_TAG, "AsyncLoader: neither control is defined!");
+            }
         }
 
         /**
@@ -145,8 +187,14 @@ public class AsyncImageGetter implements Html.ImageGetter {
                 //mReplacingDrawable = mContext.getResources().getDrawable(R.mipmap.error_pic);
                 // TODO make an error pic
             } else {
-                mReplacingDrawable.mDrawable = drawable;
-                mTextView.requestLayout(); // Refresh the TextView
+                if (mTextView != null) {
+                    mReplacingDrawable.mDrawable = drawable;
+                    mTextView.requestLayout(); // Refresh the TextView
+                }
+
+                if (mImageView != null) {
+                    mImageView.setImageDrawable(drawable);
+                }
             }
         }
 
