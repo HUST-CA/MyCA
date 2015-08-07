@@ -17,9 +17,11 @@ public class RecentActivitiesFragment extends CardListBaseFragment {
         // TODO
         // This is simulation
         Article article = new Article();
-        article.setTitle("test");
-        article.setSummary("test");
+        article.setTitle("协会第一届摄影大赛作品展览");
+        article.setSummary("比赛于今日闭幕，以下为参赛作品一览，请为您支持的作品投一票……");
         article.setPublishTime(System.currentTimeMillis());
+        // Random pic on search engine
+        article.setCoverURL("http://e.hiphotos.baidu.com/image/pic/item/a71ea8d3fd1f41342b85c597261f95cad0c85ead.jpg");
         getListAdapter().add(article);
         getListAdapter().notifyDataSetChanged();
         setRefreshingIndicator(false);
