@@ -5,5 +5,6 @@
     <dimen name="drawer_avatar_size">125dp</dimen>
     <dimen name="drawer_header_image_text_spacing">8dp</dimen>
     <dimen name="drawer_header_text_text_spacing">4dp</dimen>
-    <dimen name="list_cards_divider_height">8dp</dimen>
+    <dimen name="list_cards_divider_height">16dp</dimen>
+    <dimen name="text_on_image_margin">8dp</dimen>
 </resources>
