@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-
         setNavigationMenuListener();
     }
 
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
      * @param fragmentType Type of fragment to switch to.
      */
     private void switchToFragment(FragmentType fragmentType) {
-        // Don't reload/new the same fragment
+        // Prepare the new fragment
         Fragment newFragment;
         switch (fragmentType) {
             case FRAGMENT_RECENT_ACTIVITIES:
