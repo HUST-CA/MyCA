@@ -46,12 +46,12 @@ public class AsyncImageGetter implements Html.ImageGetter {
      *
      * @param tv TextView containing HTML
      */
-    AsyncImageGetter(TextView tv) {
+    public AsyncImageGetter(TextView tv) {
         mTextView = tv;
         mImageView = null;
     }
 
-    AsyncImageGetter(ImageView iv) {
+    public AsyncImageGetter(ImageView iv) {
         mImageView = iv;
         mTextView = null;
     }
@@ -80,6 +80,8 @@ public class AsyncImageGetter implements Html.ImageGetter {
      * @param source URL
      */
     public void loadForImageView(String source) {
+        // TODO Make a loading pic here
+        mImageView.setImageResource(R.mipmap.ic_launcher);
         AsyncLoader loader = new AsyncLoader(null, mImageView, null);
         loader.execute(source);
     }
