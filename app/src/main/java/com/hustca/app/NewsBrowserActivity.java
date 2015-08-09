@@ -38,7 +38,7 @@ public class NewsBrowserActivity extends AppCompatActivity {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.news_browser_container, frag);
-        // Do not addToBackstack since we are in a separate new activity. There's
+        // Do not addToBackStack since we are in a separate new activity. There's
         // no way to go back to previous MainActivity.
         ft.commit();
     }

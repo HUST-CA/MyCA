@@ -23,7 +23,7 @@ public class NewsBrowserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.news_browser, container);
+        return inflater.inflate(R.layout.news_browser, container, false);
     }
 
     @Override
