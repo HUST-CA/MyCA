@@ -1,6 +1,7 @@
 package com.hustca.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hustca.app.fragments.NewsBrowserFragment;
 import com.hustca.app.util.AsyncImageGetter;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +30,19 @@ public class ArticleCardListAdapter extends BaseAdapter {
 
     private ArrayList<Article> mArticles;
     private Context mContext;
+
+    // Each view shares this listener
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Article article = ((CardViewHolder) v.getTag()).relatedArticle;
+            // TODO Use different method to launch browser on landscape/tablets
+            // Here we just starts the activity, like we are in portrait
+            Intent intent = new Intent(mContext, NewsBrowserActivity.class);
+            intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article.getId());
+            mContext.startActivity(intent);
+        }
+    };
 
     public ArticleCardListAdapter(Context context) {
         mContext = context;
@@ -72,10 +87,12 @@ public class ArticleCardListAdapter extends BaseAdapter {
         Article article = mArticles.get(position);
         holder.titleText.setText(article.getTitle());
         holder.summaryText.setText(article.getSummary());
-        holder.imageView.setImageResource(R.mipmap.ic_launcher);
         holder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
                 article.getPublishTime()));
+        holder.relatedArticle = article;
+        convertView.setOnClickListener(onClickListener);
 
+        // Loading pic is drawn here
         AsyncImageGetter getter = new AsyncImageGetter(holder.imageView);
         getter.loadForImageView(article.getCoverURL());
 
@@ -122,5 +139,6 @@ public class ArticleCardListAdapter extends BaseAdapter {
         TextView titleText;
         TextView summaryText;
         TextView timeAndPlaceText;
+        Article relatedArticle;
     }
 }
