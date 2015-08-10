@@ -3,6 +3,7 @@ package com.hustca.app.util;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -57,12 +58,42 @@ public class AsyncImageGetter implements Html.ImageGetter {
     }
 
     /**
-     * Only used in Html.fromHTML(...,imgGetter,...)
-     * If you want to load images for ImageView, see setUpForImageView
+     * Return the file name in a url
+     * <p/>
+     * e.g. http://www.aaa.com/index.html -> index.html
+     * https://www.bbb.com/a -> a
+     *
+     * @param url          URL to extract file name from
+     * @param default_name the name to return if no file name exists (http://www.a.com/)
+     * @return file name
+     */
+    private static String getFilename(String url, String default_name) {
+        int pos = url.lastIndexOf("/");
+        if (pos == -1 || pos == url.length() - 1) return default_name;
+        else return url.substring(pos + 1);
+    }
+
+    /**
+     * Only used in Html.fromHTML(...,imgGetter,...)<br/>
+     * If already cached, return the cache directly. Otherwise start a new thread to load it.
+     * <em>NOTE: If the picture is cached, we return a Drawable. But when loading is required,
+     * what we return is a {@link BitmapDrawableContainer}.</em><br/>
+     * If you want to load images for ImageView, see {@link AsyncImageGetter#loadForImageView(String)}
      */
     @Override
     @SuppressWarnings("deprecation")
     public Drawable getDrawable(String source) {
+        if (mTextView == null) {
+            Log.e(LOG_TAG, "getDrawable: mTextView is null. You must initialize with the associated TextView before HTML things");
+            return null;
+        }
+
+        File cacheFile = new File(mTextView.getContext().getExternalCacheDir(),
+                getFilename(source, "default"));
+        if (cacheFile.exists()) {
+            return Drawable.createFromPath(cacheFile.getAbsolutePath());
+        }
+
         BitmapDrawableContainer consistentDrawable = new BitmapDrawableContainer();
         // TODO Make a loading pic here
         consistentDrawable.mDrawable = new BitmapDrawable(mTextView.getResources(),
@@ -75,11 +106,27 @@ public class AsyncImageGetter implements Html.ImageGetter {
     }
 
     /**
-     * Load picture for ImageView
+     * Load picture for ImageView.<br/>
+     * This will check if it's already cached.
+     * If so, no loading pic will be shown and the cached image is shown immediately.
+     * If not, it will show a loading pic and refresh when loading finished.
+     * <em>Remember to initialize with ImageView</em>
      *
      * @param source URL
      */
     public void loadForImageView(String source) {
+        if (mImageView == null) {
+            Log.e(LOG_TAG, "loadForImageView: mImageView is null. Returning.");
+            return;
+        }
+
+        File cacheFile = new File(mImageView.getContext().getExternalCacheDir(),
+                getFilename(source, "default"));
+        if (cacheFile.exists()) {
+            mImageView.setImageURI(Uri.fromFile(cacheFile));
+            return;
+        }
+
         // TODO Make a loading pic here
         mImageView.setImageResource(R.mipmap.ic_launcher);
         AsyncLoader loader = new AsyncLoader(null, mImageView, null);
@@ -129,9 +176,6 @@ public class AsyncImageGetter implements Html.ImageGetter {
             // TODO what if storage is not available?
             // TODO different pic with same name
             File cacheFile = new File(mContext.getExternalCacheDir(), getFilename(url, "default"));
-            if (cacheFile.exists()) {
-                return Drawable.createFromPath(cacheFile.getAbsolutePath());
-            }
             InputStream in = null;
             OutputStream out = null;
             try {
@@ -198,22 +242,6 @@ public class AsyncImageGetter implements Html.ImageGetter {
                     mImageView.setImageDrawable(drawable);
                 }
             }
-        }
-
-        /**
-         * Return the file name in a url
-         * <p/>
-         * e.g. http://www.aaa.com/index.html -> index.html
-         * https://www.bbb.com/a -> a
-         *
-         * @param url          URL to extract file name from
-         * @param default_name the name to return if no file name exists (http://www.a.com/)
-         * @return file name
-         */
-        private String getFilename(String url, String default_name) {
-            int pos = url.lastIndexOf("/");
-            if (pos == -1 || pos == url.length() - 1) return default_name;
-            else return url.substring(pos + 1);
         }
     }
 }
