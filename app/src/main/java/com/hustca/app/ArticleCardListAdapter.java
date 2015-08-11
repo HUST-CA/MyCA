@@ -39,7 +39,7 @@ public class ArticleCardListAdapter extends BaseAdapter {
             // TODO Use different method to launch browser on landscape/tablets
             // Here we just starts the activity, like we are in portrait
             Intent intent = new Intent(mContext, NewsBrowserActivity.class);
-            intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article.getId());
+            intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
             mContext.startActivity(intent);
         }
     };

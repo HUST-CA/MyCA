@@ -25,12 +25,12 @@ public class NewsBrowserActivity extends AppCompatActivity {
         super.onResume();
 
         Bundle options = new Bundle(1);
-        int articleId = getIntent().getIntExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, -1);
-        if (articleId == -1) {
-            Log.e(LOG_TAG, "onResume: article ID not defined in intent. Returning.");
+        Article article = getIntent().getParcelableExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE);
+        if (article == null) {
+            Log.e(LOG_TAG, "onResume: article parcel not defined in intent. Returning.");
             return;
         } else {
-            options.putInt(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, articleId);
+            options.putParcelable(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
         }
 
         NewsBrowserFragment frag = new NewsBrowserFragment();
