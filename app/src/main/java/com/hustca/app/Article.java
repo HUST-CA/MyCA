@@ -65,6 +65,12 @@ public class Article implements Parcelable {
         mCoverURL = in.readString();
     }
 
+    public Article() {
+        mId = -1;
+        // Seems like nothing else could be done here.
+        // Leave everything null as the default initializer does.
+    }
+
     /*
      * Countless getters
      */
