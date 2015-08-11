@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
@@ -100,7 +99,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
                 ((BitmapDrawable) mTextView.getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap());
 
         /* Only used in TextView so ImageView is null here */
-        AsyncLoader loader = new AsyncLoader(mTextView, null, consistentDrawable);
+        AsyncLoaderForTextView loader = new AsyncLoaderForTextView(mTextView, consistentDrawable);
         loader.execute(source);
         return consistentDrawable;
     }
@@ -129,35 +128,30 @@ public class AsyncImageGetter implements Html.ImageGetter {
 
         // TODO Make a loading pic here
         mImageView.setImageResource(R.mipmap.ic_launcher);
-        AsyncLoader loader = new AsyncLoader(null, mImageView, null);
+        AsyncLoaderForImageView loader = new AsyncLoaderForImageView(mImageView);
         loader.execute(source);
     }
 
     /**
-     * This class will download the pic to local storage.
-     * After downloading, it will replace the drawable in {@link BitmapDrawableContainer}
-     * and refresh the corresponding TextView/ImageView.
-     * If the pic can be found in local cache, do not load and return directly.
+     * This class will download the specific picture to local storage.<p/>
+     * This is only a network operator. The logic for refreshing controls should be
+     * implemented in subclasses' onPostExecute().<p/>
+     * NOTE: this class will NOT respect existing cached file and will overwrite it.
      */
-    private class AsyncLoader extends AsyncTask<String, Void, Drawable> {
-        private Context mContext; // from mTextView
-        private TextView mTextView;
-        private ImageView mImageView;
-        private BitmapDrawableContainer mReplacingDrawable;
-
-        AsyncLoader(@Nullable TextView textView, @Nullable ImageView imageView,
-                    @Nullable BitmapDrawableContainer replacingDrawable) {
-            this.mTextView = textView;
-            this.mImageView = imageView;
-            if (mTextView != null) {
-                mContext = mTextView.getContext();
-                mReplacingDrawable = replacingDrawable;
-            } else if (mImageView != null) {
-                mContext = mImageView.getContext();
-            } else {
-                Log.wtf(LOG_TAG, "AsyncLoader: neither control is defined!");
-            }
-        }
+    private abstract class AsyncLoaderBase extends AsyncTask<String, Void, Drawable> {
+        /**
+         * Return a cache file path for a URL.<p/>
+         * e.g. <em>http://www.a.com/a.jpg</em> returns
+         * <em>/sdcard/Android/data/com.this.app/files/a.jpg</em><br/>
+         * This file can be non-existent and this class will create it.
+         * <p/>
+         * Since this is a network-only bare-bone class, it can not read external cache dir
+         * by Context. Plz implement this using your mContext in your subclass.
+         *
+         * @param source URL to load. You can just take the file name.
+         * @return The cache file path corresponding to the URL.
+         */
+        protected abstract String getCacheFilename(String source);
 
         /**
          * Fetch picture from URL and store to local storage.
@@ -175,7 +169,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
             String url = params[0];
             // TODO what if storage is not available?
             // TODO different pic with same name
-            File cacheFile = new File(mContext.getExternalCacheDir(), getFilename(url, "default"));
+            File cacheFile = new File(getCacheFilename(url));
             InputStream in = null;
             OutputStream out = null;
             try {
@@ -225,23 +219,63 @@ public class AsyncImageGetter implements Html.ImageGetter {
             }
             return Drawable.createFromPath(cacheFile.getAbsolutePath());
         }
+    }
+
+    private class AsyncLoaderForTextView extends AsyncLoaderBase {
+        private TextView mTextView;
+        private Context mContext;
+        private BitmapDrawableContainer mReplacingDrawable;
+
+        AsyncLoaderForTextView(TextView tv, BitmapDrawableContainer drawableContainer) {
+            mTextView = tv;
+            mContext = tv.getContext();
+            mReplacingDrawable = drawableContainer;
+        }
 
         @Override
         protected void onPostExecute(Drawable drawable) {
-            super.onPostExecute(drawable);
             if (drawable == null) {
-                //mReplacingDrawable = mContext.getResources().getDrawable(R.mipmap.error_pic);
-                // TODO make an error pic
+                // TODO Make an error pic
             } else {
                 if (mTextView != null) {
                     mReplacingDrawable.mDrawable = drawable;
                     mTextView.requestLayout(); // Refresh the TextView
                 }
+            }
+        }
 
+        @Override
+        protected String getCacheFilename(String source) {
+            return mContext.getExternalCacheDir().getAbsolutePath()
+                    + File.separator + getFilename(source, "default");
+        }
+    }
+
+    private class AsyncLoaderForImageView extends AsyncLoaderBase {
+        private static final String LOG_TAG = "MyCA_AsyncLoaderForImg";
+        private ImageView mImageView;
+        private Context mContext;
+
+        AsyncLoaderForImageView(ImageView iv) {
+            mImageView = iv;
+            mContext = iv.getContext();
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            if (drawable == null) {
+                // TODO Make an error pic
+            } else {
                 if (mImageView != null) {
                     mImageView.setImageDrawable(drawable);
                 }
             }
+        }
+
+        @Override
+        protected String getCacheFilename(String source) {
+            return mContext.getExternalCacheDir().getAbsolutePath()
+                    + File.separator + getFilename(source, "default");
         }
     }
 }
