@@ -64,4 +64,13 @@ public abstract class CardListBaseFragment extends Fragment {
     protected void setRefreshingIndicator(boolean refreshing) {
         mSwipeToRefreshLayout.setRefreshing(refreshing);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Bug fix: Switching frags doesn't stop refreshing indicator.
+        // Really weird since the view has been destroyed.
+        mSwipeToRefreshLayout.setRefreshing(false);
+    }
 }
