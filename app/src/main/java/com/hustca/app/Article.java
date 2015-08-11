@@ -1,5 +1,8 @@
 package com.hustca.app;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONObject;
 
 /**
@@ -8,7 +11,18 @@ import org.json.JSONObject;
  * A class representing an article (any piece of text here).
  * Supported types: see the code of {@link com.hustca.app.Article.ArticleType}
  */
-public class Article {
+public class Article implements Parcelable {
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        @Override
+        public Article createFromParcel(Parcel in) {
+            return new Article(in);
+        }
+
+        @Override
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
     /**
      * Article type. See {@link com.hustca.app.Article.ArticleType}
      */
@@ -37,11 +51,19 @@ public class Article {
      * TODO Remove this. Load with ArticleUtil
      */
     private String mContent;
-
     /**
      * URL of cover picture. Should be specified by server side.
      */
     private String mCoverURL;
+
+    protected Article(Parcel in) {
+        mId = in.readInt();
+        mPublishTime = in.readLong();
+        mTitle = in.readString();
+        mSummary = in.readString();
+        mContent = in.readString();
+        mCoverURL = in.readString();
+    }
 
     /*
      * Countless getters
@@ -112,6 +134,24 @@ public class Article {
 
     public void initArticleWithJSON(JSONObject json) {
         // TODO
+    }
+
+    /* Auto generated Parcelable implementations. Impressive! */
+    @Override
+    public int describeContents() {
+        // I don't know what does this do. Leave it 0. (one type only)
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        // Still don't know what does the second param do
+        dest.writeInt(mId);
+        dest.writeLong(mPublishTime);
+        dest.writeString(mTitle);
+        dest.writeString(mSummary);
+        dest.writeString(mContent);
+        dest.writeString(mCoverURL);
     }
 
     public enum ArticleType {
