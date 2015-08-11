@@ -38,7 +38,7 @@
                     android:id="@+id/news_browser_header_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/image_card"
+                    android:layout_alignBottom="@id/news_browser_header_image"
                     android:layout_marginBottom="@dimen/text_on_image_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"

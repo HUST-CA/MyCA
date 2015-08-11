@@ -31,7 +31,6 @@ public class NewsBrowserFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.news_browser, container, false);
         mHeaderImageView = (ImageView) v.findViewById(R.id.news_browser_header_image);
         mHeaderTextView = (TextView) v.findViewById(R.id.news_browser_header_text);

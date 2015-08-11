@@ -252,7 +252,6 @@ public class AsyncImageGetter implements Html.ImageGetter {
     }
 
     private class AsyncLoaderForImageView extends AsyncLoaderBase {
-        private static final String LOG_TAG = "MyCA_AsyncLoaderForImg";
         private ImageView mImageView;
         private Context mContext;
 
