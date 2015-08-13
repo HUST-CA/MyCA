@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MyCA_MA";
 
     Fragment mCurrentFragment;
+    NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         setNavigationMenuListener();
     }
 
@@ -86,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         // Default fragment to show on boot
-        // Remember to set checked property in XML if you want to change this
+
+        // Remember to set checked property in XML if you want to change this (FOR INITIAL SELECTION)
+        // getItem(0) is its index. This will affect the selection on re-launch
+        // from multi-task view or something like that.
+        mNavigationView.getMenu().getItem(0).setChecked(true);
         switchToFragment(FragmentType.FRAGMENT_RECENT_ACTIVITIES);
     }
 
@@ -113,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavigationMenuListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
