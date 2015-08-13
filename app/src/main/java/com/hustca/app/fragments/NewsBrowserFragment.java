@@ -37,6 +37,7 @@ public class NewsBrowserFragment extends Fragment {
         mHeaderImageView = (ImageView) v.findViewById(R.id.news_browser_header_image);
         mCollapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
         mDetailTextView = (TextView) v.findViewById(R.id.news_browser_detail_text);
+
         return v;
     }
 
