@@ -13,6 +13,9 @@ import com.hustca.app.fragments.NewsBrowserFragment;
 public class NewsBrowserActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MyCA_NewsBrowserACT";
+    private static final String KEY_IS_FRAGMENT_SHOWN = "is_fragment_shown";
+    /* This boolean is to keep only one frag is shown during multi-tasking */
+    private boolean mIsFragmentShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,23 +27,27 @@ public class NewsBrowserActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Bundle options = new Bundle(1);
-        Article article = getIntent().getParcelableExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE);
-        if (article == null) {
-            Log.e(LOG_TAG, "onResume: article parcel not defined in intent. Returning.");
-            return;
-        } else {
-            options.putParcelable(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
+        if (!mIsFragmentShown) {
+            Bundle options = new Bundle(1);
+            Article article = getIntent().getParcelableExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE);
+            if (article == null) {
+                Log.e(LOG_TAG, "onResume: article parcel not defined in intent. Returning.");
+                return;
+            } else {
+                options.putParcelable(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
+            }
+
+            NewsBrowserFragment frag = new NewsBrowserFragment();
+            frag.setArguments(options);
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(R.id.news_browser_container, frag);
+            // Do not addToBackStack since we are in a separate new activity. There's
+            // no way to go back to previous MainActivity.
+            ft.commit();
+
+            mIsFragmentShown = true;
         }
-
-        NewsBrowserFragment frag = new NewsBrowserFragment();
-        frag.setArguments(options);
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.news_browser_container, frag);
-        // Do not addToBackStack since we are in a separate new activity. There's
-        // no way to go back to previous MainActivity.
-        ft.commit();
     }
 
     @Override
