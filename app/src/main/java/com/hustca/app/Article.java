@@ -52,7 +52,6 @@ public class Article implements Parcelable {
      */
     private String mContentURL;
     /**
-     * TODO Remove this. Load with ArticleUtil
      * This will not be added into parcel.
      */
     private String mContent;
