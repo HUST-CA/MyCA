@@ -4,22 +4,16 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hustca.app.R;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 /**
@@ -132,96 +126,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
         loader.execute(source);
     }
 
-    /**
-     * This class will download the specific picture to local storage.<p/>
-     * This is only a network operator. The logic for refreshing controls should be
-     * implemented in subclasses' onPostExecute().<p/>
-     * NOTE: this class will NOT respect existing cached file and will overwrite it.
-     */
-    private abstract class AsyncLoaderBase extends AsyncTask<String, Void, Drawable> {
-        /**
-         * Return a cache file path for a URL.<p/>
-         * e.g. <em>http://www.a.com/a.jpg</em> returns
-         * <em>/sdcard/Android/data/com.this.app/files/a.jpg</em><br/>
-         * This file can be non-existent and this class will create it.
-         * <p/>
-         * Since this is a network-only bare-bone class, it can not read external cache dir
-         * by Context. Plz implement this using your mContext in your subclass.
-         *
-         * @param source URL to load. You can just take the file name.
-         * @return The cache file path corresponding to the URL.
-         */
-        protected abstract String getCacheFilename(String source);
-
-        /**
-         * Fetch picture from URL and store to local storage.
-         *
-         * @param params [0] for URL
-         * @return drawable fetched and cached. If any error happens, null.
-         */
-        @Override
-        protected Drawable doInBackground(String... params) {
-            if (params.length == 0) {
-                Log.e(LOG_TAG, "doInBackground: params length = 0");
-                return null;
-            }
-
-            String url = params[0];
-            // TODO what if storage is not available?
-            // TODO different pic with same name
-            File cacheFile = new File(getCacheFilename(url));
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                URL fURL = new URL(url);
-                HttpURLConnection conn = (HttpURLConnection) fURL.openConnection();
-                conn.setConnectTimeout(CONNECTING_TIME_OUT_MILLIS);
-                conn.setRequestMethod("GET");
-                if (conn.getResponseCode() == 200) {
-                    in = conn.getInputStream();
-                    out = new FileOutputStream(cacheFile);
-
-                    byte[] buffer = new byte[BUFFER_SIZE_BYTES];
-                    int len;
-                    while ((len = in.read(buffer)) != -1) {
-                        out.write(buffer, 0, len);
-                    }
-                } else {
-                    Log.e(LOG_TAG, "AsyncLoader: URL does not return 200: " + conn.getResponseCode());
-                    // TODO notify
-                    return null;
-                }
-            } catch (MalformedURLException e) {
-                Log.e(LOG_TAG, "AsyncLoader: URL malformed: " + url);
-                //TODO notify user?
-                return null;
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "AsyncLoader: IOException: " + e.getLocalizedMessage());
-                e.printStackTrace();
-                //TODO must notify user this time
-                return null;
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        Log.i(LOG_TAG, "AsyncLoader: in stream is null. No need to close.");
-                    }
-                }
-
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        Log.i(LOG_TAG, "AsyncLoader: out stream is null. No need to close.");
-                    }
-                }
-            }
-            return Drawable.createFromPath(cacheFile.getAbsolutePath());
-        }
-    }
-
-    private class AsyncLoaderForTextView extends AsyncLoaderBase {
+    private class AsyncLoaderForTextView extends CachedAsyncLoader {
         private TextView mTextView;
         private Context mContext;
         private BitmapDrawableContainer mReplacingDrawable;
@@ -233,25 +138,32 @@ public class AsyncImageGetter implements Html.ImageGetter {
         }
 
         @Override
-        protected void onPostExecute(Drawable drawable) {
-            if (drawable == null) {
+        protected void onPostExecute(InputStream in) {
+            if (in == null) {
                 // TODO Make an error pic
+                mReplacingDrawable.mDrawable = mContext.getResources().getDrawable(R.mipmap.ic_launcher);
             } else {
                 if (mTextView != null) {
-                    mReplacingDrawable.mDrawable = drawable;
+                    mReplacingDrawable.mDrawable = Drawable.createFromStream(in, null);
                     mTextView.requestLayout(); // Refresh the TextView
                 }
             }
         }
 
         @Override
-        protected String getCacheFilename(String source) {
+        protected String getCacheFileName(String source) {
             return mContext.getExternalCacheDir().getAbsolutePath()
                     + File.separator + getFilename(source, "default");
         }
+
+        @Override
+        protected void exceptionHandler(Exception e) {
+            Toast.makeText(mContext, R.string.network_error + " " + e.getLocalizedMessage()
+                    , Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private class AsyncLoaderForImageView extends AsyncLoaderBase {
+    private class AsyncLoaderForImageView extends CachedAsyncLoader {
         private ImageView mImageView;
         private Context mContext;
 
@@ -261,20 +173,27 @@ public class AsyncImageGetter implements Html.ImageGetter {
         }
 
         @Override
-        protected void onPostExecute(Drawable drawable) {
-            if (drawable == null) {
+        protected void onPostExecute(InputStream in) {
+            if (in == null) {
                 // TODO Make an error pic
+                mImageView.setImageResource(R.mipmap.ic_launcher);
             } else {
                 if (mImageView != null) {
-                    mImageView.setImageDrawable(drawable);
+                    mImageView.setImageDrawable(Drawable.createFromStream(in, null));
                 }
             }
         }
 
         @Override
-        protected String getCacheFilename(String source) {
+        protected String getCacheFileName(String source) {
             return mContext.getExternalCacheDir().getAbsolutePath()
                     + File.separator + getFilename(source, "default");
+        }
+
+        @Override
+        protected void exceptionHandler(Exception e) {
+            Toast.makeText(mContext, R.string.network_error + " " + e.getLocalizedMessage()
+                    , Toast.LENGTH_SHORT).show();
         }
     }
 }

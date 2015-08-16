@@ -11,4 +11,5 @@
     <string name="about">About</string>
     <string name="drawer_submenu_title">MORE</string>
     <string name="title_activity_content_browser">ContentBrowserActivity</string>
+    <string name="network_error">Error loading</string>
 </resources>

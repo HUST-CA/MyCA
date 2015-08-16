@@ -10,4 +10,5 @@
     <string name="switch_assoc">切换组织</string>
     <string name="about">关于</string>
     <string name="drawer_submenu_title">更多</string>
+    <string name="network_error">加载出错</string>
 </resources>
