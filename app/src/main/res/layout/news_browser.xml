@@ -48,6 +48,6 @@
             android:id="@+id/news_browser_detail_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="70sp"/>
+            android:textSize="16sp"/>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

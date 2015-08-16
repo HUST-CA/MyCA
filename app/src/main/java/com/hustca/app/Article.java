@@ -48,7 +48,12 @@ public class Article implements Parcelable {
      */
     private String mSummary;
     /**
+     * Content URL
+     */
+    private String mContentURL;
+    /**
      * TODO Remove this. Load with ArticleUtil
+     * This will not be added into parcel.
      */
     private String mContent;
     /**
@@ -61,7 +66,7 @@ public class Article implements Parcelable {
         mPublishTime = in.readLong();
         mTitle = in.readString();
         mSummary = in.readString();
-        mContent = in.readString();
+        mContentURL = in.readString();
         mCoverURL = in.readString();
     }
 
@@ -138,6 +143,14 @@ public class Article implements Parcelable {
         this.mCoverURL = mCoverURL;
     }
 
+    public String getContentURL() {
+        return mContentURL;
+    }
+
+    public void setContentURL(String mContentURL) {
+        this.mContentURL = mContentURL;
+    }
+
     public void initArticleWithJSON(JSONObject json) {
         // TODO
     }
@@ -156,7 +169,7 @@ public class Article implements Parcelable {
         dest.writeLong(mPublishTime);
         dest.writeString(mTitle);
         dest.writeString(mSummary);
-        dest.writeString(mContent);
+        dest.writeString(mContentURL);
         dest.writeString(mCoverURL);
     }
 

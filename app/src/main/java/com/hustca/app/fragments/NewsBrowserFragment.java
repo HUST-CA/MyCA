@@ -3,6 +3,8 @@ package com.hustca.app.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.hustca.app.Article;
 import com.hustca.app.R;
+import com.hustca.app.util.AsyncArticleContentLoader;
 import com.hustca.app.util.AsyncImageGetter;
 
 /**
@@ -45,7 +48,7 @@ public class NewsBrowserFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Article article = getArguments().getParcelable(KEY_ARTICLE_BUNDLE);
+        final Article article = getArguments().getParcelable(KEY_ARTICLE_BUNDLE);
         if (article == null) {
             Log.w(LOG_TAG, "onResume: article from Parcelable is null. Returning.");
             // TODO notify user about broken object
@@ -60,7 +63,16 @@ public class NewsBrowserFragment extends Fragment {
         mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_CollapsedCollapsingBar);
         mCollapsingToolbar.setExpandedTitleTextAppearance(R.style.TextAppearance_ExpandedCollapsingBar);
 
-        // TODO
-        mDetailTextView.setText("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        mDetailTextView.setMovementMethod(new LinkMovementMethod());
+        AsyncArticleContentLoader contentLoader = new AsyncArticleContentLoader(this.getActivity(),
+                new AsyncArticleContentLoader.CallbackOnLoadFinished() {
+                    @Override
+                    public void onFinish(String content) {
+                        article.setContent(content);
+                        mDetailTextView.setText(Html.fromHtml(content,
+                                new AsyncImageGetter(mDetailTextView), null));
+                    }
+                });
+        contentLoader.execute(article.getContentURL());
     }
 }

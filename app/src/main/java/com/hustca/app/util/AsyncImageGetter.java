@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
@@ -24,8 +25,7 @@ import java.io.InputStream;
  */
 public class AsyncImageGetter implements Html.ImageGetter {
     private static final String LOG_TAG = "MyCA_AsyncIMG";
-    private static final int CONNECTING_TIME_OUT_MILLIS = 5000;
-    private static final int BUFFER_SIZE_BYTES = 1024;
+
     /**
      * Associated TextView. Used to requestLayout() after finishing.
      */
@@ -156,10 +156,24 @@ public class AsyncImageGetter implements Html.ImageGetter {
                     + File.separator + getFilename(source, "default");
         }
 
+        /**
+         * This is often called from network thread. So use a handler
+         *
+         * @param e Captured exception
+         */
         @Override
-        protected void exceptionHandler(Exception e) {
-            Toast.makeText(mContext, R.string.network_error + " " + e.getLocalizedMessage()
-                    , Toast.LENGTH_SHORT).show();
+        protected void exceptionHandler(final Exception e) {
+            e.printStackTrace();
+            Handler handler = new Handler(mContext.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext,
+                            mContext.getResources().getString(R.string.network_error)
+                                    + " " + e.getLocalizedMessage()
+                            , Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -191,9 +205,18 @@ public class AsyncImageGetter implements Html.ImageGetter {
         }
 
         @Override
-        protected void exceptionHandler(Exception e) {
-            Toast.makeText(mContext, R.string.network_error + " " + e.getLocalizedMessage()
-                    , Toast.LENGTH_SHORT).show();
+        protected void exceptionHandler(final Exception e) {
+            e.printStackTrace();
+            Handler handler = new Handler(mContext.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext,
+                            mContext.getResources().getString(R.string.network_error)
+                                    + " " + e.getLocalizedMessage()
+                            , Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }

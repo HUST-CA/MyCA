@@ -35,7 +35,7 @@ public abstract class AsyncLoader extends AsyncTask<String, Void, InputStream> {
      * what's happening, not just "network error")
      * Please implement this in subclasses using Log or Toast to properly show the errors.
      * And we return null after this method call.
-     *
+     * <b>NOTE that this is often called from network thread, plz use a handler</b>
      * @param e Captured exception
      */
     protected abstract void exceptionHandler(Exception e);
