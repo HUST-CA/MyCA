@@ -68,6 +68,7 @@ public class NewsBrowserFragment extends Fragment {
                 return true;
             }
         });
+        mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.loadUrl(article.getContentURL());
     }
 }

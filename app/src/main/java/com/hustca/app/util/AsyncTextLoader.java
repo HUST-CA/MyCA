@@ -19,17 +19,14 @@ import java.io.UnsupportedEncodingException;
  * <p/>
  * Async loader for article's full content. Of course, we do not cache this.
  */
-public class AsyncArticleContentLoader extends AsyncLoader {
+public class AsyncTextLoader extends AsyncLoader {
     private static final String LOG_TAG = "MyCA_AsyncContent";
-    /**
-     * Bytes to read from network at once.
-     */
-    private static final int READ_BUFFER_SIZE = 1024;
+
     private Context mContext;
     private CallbackOnLoadFinished mCallback;
     private String mReturningString;
 
-    public AsyncArticleContentLoader(Context context, CallbackOnLoadFinished cb) {
+    public AsyncTextLoader(Context context, CallbackOnLoadFinished cb) {
         mContext = context;
         mCallback = cb;
     }
