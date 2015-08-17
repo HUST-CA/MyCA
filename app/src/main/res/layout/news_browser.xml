@@ -42,12 +42,12 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/news_browser_detail_text"
+        <WebView
+            android:id="@+id/news_browser_web"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="16sp"/>
+            android:layout_height="match_parent"/>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

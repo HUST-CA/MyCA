@@ -22,6 +22,7 @@ public class RecentActivitiesFragment extends CardListBaseFragment {
         article.setPublishTime(System.currentTimeMillis());
         // Random pic on search engine
         article.setCoverURL("http://e.hiphotos.baidu.com/image/pic/item/a71ea8d3fd1f41342b85c597261f95cad0c85ead.jpg");
+        article.setContentURL("http://www.baidu.com");
         getListAdapter().add(article);
         getListAdapter().notifyDataSetChanged();
         setRefreshingIndicator(false);

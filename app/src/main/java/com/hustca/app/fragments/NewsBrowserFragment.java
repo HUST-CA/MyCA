@@ -3,18 +3,16 @@ package com.hustca.app.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.hustca.app.Article;
 import com.hustca.app.R;
-import com.hustca.app.util.AsyncArticleContentLoader;
 import com.hustca.app.util.AsyncImageGetter;
 
 /**
@@ -31,15 +29,15 @@ public class NewsBrowserFragment extends Fragment {
 
     private static final String LOG_TAG = "MyCA_NewsBrowserFrag";
     private ImageView mHeaderImageView;
-    private TextView mDetailTextView;
     private CollapsingToolbarLayout mCollapsingToolbar;
+    private WebView mWebView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.news_browser, container, false);
         mHeaderImageView = (ImageView) v.findViewById(R.id.news_browser_header_image);
         mCollapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
-        mDetailTextView = (TextView) v.findViewById(R.id.news_browser_detail_text);
+        mWebView = (WebView) v.findViewById(R.id.news_browser_web);
 
         return v;
     }
@@ -63,16 +61,13 @@ public class NewsBrowserFragment extends Fragment {
         mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_CollapsedCollapsingBar);
         mCollapsingToolbar.setExpandedTitleTextAppearance(R.style.TextAppearance_ExpandedCollapsingBar);
 
-        mDetailTextView.setMovementMethod(new LinkMovementMethod());
-        AsyncArticleContentLoader contentLoader = new AsyncArticleContentLoader(this.getActivity(),
-                new AsyncArticleContentLoader.CallbackOnLoadFinished() {
-                    @Override
-                    public void onFinish(String content) {
-                        article.setContent(content);
-                        mDetailTextView.setText(Html.fromHtml(content,
-                                new AsyncImageGetter(mDetailTextView), null));
-                    }
-                });
-        contentLoader.execute(article.getContentURL());
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        mWebView.loadUrl(article.getContentURL());
     }
 }
