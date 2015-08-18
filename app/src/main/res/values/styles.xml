@@ -3,6 +3,8 @@
     <!-- No statusBarColor available under v21 -->
     <style name="AppTheme" parent="AppBaseTheme" />
 
+    <style name="AppTheme.SolidStatusBar" parent="AppBaseTheme"/>
+
     <!-- Base application theme. -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#db4437</item>

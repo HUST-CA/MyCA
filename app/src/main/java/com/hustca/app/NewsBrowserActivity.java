@@ -13,7 +13,6 @@ import com.hustca.app.fragments.NewsBrowserFragment;
 public class NewsBrowserActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MyCA_NewsBrowserACT";
-    private static final String KEY_IS_FRAGMENT_SHOWN = "is_fragment_shown";
     /* This boolean is to keep only one frag is shown during multi-tasking */
     private boolean mIsFragmentShown = false;
 

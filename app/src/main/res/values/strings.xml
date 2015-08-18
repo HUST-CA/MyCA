@@ -12,4 +12,8 @@
     <string name="drawer_submenu_title">MORE</string>
     <string name="title_activity_content_browser">ContentBrowserActivity</string>
     <string name="network_error">Error loading</string>
+    <string name="push_settings">Push Settings</string>
+    <string name="enable_push">Enable Push</string>
+    <string name="enable_push_sound">Ring</string>
+    <string name="enable_push_vibrate">Vibration</string>
 </resources>

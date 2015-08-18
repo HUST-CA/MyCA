@@ -2,6 +2,7 @@ package com.hustca.app;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -152,8 +153,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     /* Following can't be handled with FragmentType */
                     case R.id.menu_settings:
-                        // TODO Settings activity
-                        menuItem.setChecked(true);
+                        Intent intent = new Intent();
+                        intent.setClass(getApplicationContext(), SettingsActivity.class);
+                        startActivity(intent);
                         return true;
                     case R.id.menu_about:
                         // TODO About

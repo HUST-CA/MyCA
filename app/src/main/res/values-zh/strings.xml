@@ -11,4 +11,8 @@
     <string name="about">关于</string>
     <string name="drawer_submenu_title">更多</string>
     <string name="network_error">加载出错</string>
+    <string name="enable_push">启用推送</string>
+    <string name="enable_push_sound">有新推送时响铃</string>
+    <string name="enable_push_vibrate">有新推送时震动</string>
+    <string name="push_settings">推送设置</string>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/push_settings">
+        <CheckBoxPreference
+            android:key="push_enabled"
+            android:title="@string/enable_push">
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:dependency="push_enabled"
+            android:key="push_sound_enabled"
+            android:title="@string/enable_push_sound">
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:dependency="push_enabled"
+            android:key="push_vibrate_enabled"
+            android:title="@string/enable_push_vibrate">
+        </CheckBoxPreference>
+    </PreferenceCategory>
+</PreferenceScreen>
