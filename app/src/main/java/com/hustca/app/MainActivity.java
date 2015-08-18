@@ -14,6 +14,8 @@ import com.hustca.app.fragments.HistoryFragment;
 import com.hustca.app.fragments.NewsFragment;
 import com.hustca.app.fragments.RecentActivitiesFragment;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        // JPush Again!
+        JPushInterface.onPause(this);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         // Default fragment to show on boot
@@ -94,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         // from multi-task view or something like that.
         mNavigationView.getMenu().getItem(0).setChecked(true);
         switchToFragment(FragmentType.FRAGMENT_RECENT_ACTIVITIES);
+
+        // JPush again!
+        JPushInterface.onResume(this);
     }
 
     @Override
