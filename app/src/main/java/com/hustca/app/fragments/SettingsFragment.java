@@ -1,16 +1,12 @@
 package com.hustca.app.fragments;
 
-import android.app.Notification;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import com.hustca.app.R;
 
-import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -50,24 +46,4 @@ public class SettingsFragment extends PreferenceFragment {
 
     }
 
-    @Override
-    public void onStop() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (pref.getBoolean(KEY_PUSH_ENABLED, false)) {
-            BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(mContext);
-
-            builder.notificationFlags = 0;
-
-            if (pref.getBoolean(SettingsFragment.KEY_PUSH_SOUND_ENABLED, false)) {
-                builder.notificationFlags |= Notification.DEFAULT_SOUND;
-            }
-
-            if (pref.getBoolean(SettingsFragment.KEY_PUSH_VIBRATION_ENABLED, false)) {
-                builder.notificationFlags |= Notification.DEFAULT_VIBRATE;
-            }
-
-            JPushInterface.setDefaultPushNotificationBuilder(builder);
-        }
-        super.onStop();
-    }
 }

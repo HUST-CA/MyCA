@@ -131,6 +131,14 @@
             android:name="JPUSH_APPKEY"
             android:value="yourkey"/>
 
+        <receiver
+            android:name=".PMReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
+                <category android:name="com.hustca.app"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
