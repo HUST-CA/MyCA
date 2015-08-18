@@ -1,8 +1,13 @@
 package com.hustca.app.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.NavUtils;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +38,26 @@ public class NewsBrowserFragment extends Fragment {
     private WebView mWebView;
 
     @Override
+    @SuppressWarnings("deprecation")
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.news_browser, container, false);
         mHeaderImageView = (ImageView) v.findViewById(R.id.news_browser_header_image);
         mCollapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
         mWebView = (WebView) v.findViewById(R.id.news_browser_web);
+
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.news_browser_toolbar);
+        Drawable arrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        // AS suggested this if
+        if (arrow != null) {
+            arrow.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            toolbar.setNavigationIcon(arrow);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                }
+            });
+        }
 
         return v;
     }

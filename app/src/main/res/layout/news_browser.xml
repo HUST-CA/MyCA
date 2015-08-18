@@ -34,7 +34,6 @@
                 android:id="@+id/news_browser_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"/>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
