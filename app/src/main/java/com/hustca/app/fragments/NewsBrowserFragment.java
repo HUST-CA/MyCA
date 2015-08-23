@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.hustca.app.Article;
 import com.hustca.app.R;
@@ -36,6 +38,7 @@ public class NewsBrowserFragment extends Fragment {
     private ImageView mHeaderImageView;
     private CollapsingToolbarLayout mCollapsingToolbar;
     private WebView mWebView;
+    private ProgressBar mProgressBar;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -44,6 +47,7 @@ public class NewsBrowserFragment extends Fragment {
         mHeaderImageView = (ImageView) v.findViewById(R.id.news_browser_header_image);
         mCollapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
         mWebView = (WebView) v.findViewById(R.id.news_browser_web);
+        mProgressBar = (ProgressBar) v.findViewById(R.id.news_browser_progress);
 
         Toolbar toolbar = (Toolbar) v.findViewById(R.id.news_browser_toolbar);
         Drawable arrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -81,11 +85,22 @@ public class NewsBrowserFragment extends Fragment {
         mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_CollapsedCollapsingBar);
         mCollapsingToolbar.setExpandedTitleTextAppearance(R.style.TextAppearance_ExpandedCollapsingBar);
 
+        mProgressBar.setIndeterminate(true);
+
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
+            }
+        });
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (newProgress != 100)
+                    mProgressBar.setVisibility(View.VISIBLE);
+                else
+                    mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
         mWebView.getSettings().setJavaScriptEnabled(true);

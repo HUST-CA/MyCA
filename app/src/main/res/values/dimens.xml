@@ -7,5 +7,5 @@
     <dimen name="drawer_header_text_text_spacing">4dp</dimen>
     <dimen name="list_cards_divider_height">16dp</dimen>
     <dimen name="text_on_image_margin">8dp</dimen>
-    <dimen name="card_image_height">200dp</dimen>
+    <dimen name="list_card_image_height">200dp</dimen>
 </resources>
