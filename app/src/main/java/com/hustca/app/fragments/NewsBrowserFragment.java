@@ -85,6 +85,7 @@ public class NewsBrowserFragment extends Fragment {
         mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_CollapsedCollapsingBar);
         mCollapsingToolbar.setExpandedTitleTextAppearance(R.style.TextAppearance_ExpandedCollapsingBar);
 
+        mProgressBar.setMax(100); // newProgress documentation. For later use.
         mProgressBar.setIndeterminate(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -97,13 +98,22 @@ public class NewsBrowserFragment extends Fragment {
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress != 100)
+                mProgressBar.setIndeterminate(false); // We have clear % now. Not intermediate.
+                mProgressBar.setProgress(newProgress);
+                if (newProgress != 100) {
                     mProgressBar.setVisibility(View.VISIBLE);
-                else
+                } else {
                     mProgressBar.setVisibility(View.INVISIBLE);
+                }
             }
         });
         mWebView.getSettings().setJavaScriptEnabled(true);
+
+        mProgressBar.setVisibility(View.VISIBLE);
         mWebView.loadUrl(article.getContentURL());
+
+        /* Before 1st progress update (before 0%) show an intermediate bar,
+        after 1st update (we got percentage) show the progress clearly.
+         */
     }
 }
