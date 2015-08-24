@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.NavUtils;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -77,6 +79,16 @@ public class NewsBrowserFragment extends Fragment {
             return;
         }
 
+        mHeaderImageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mHeaderImageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().startPostponedEnterTransition();
+                }
+                return true;
+            }
+        });
         AsyncImageGetter asyncImageGetter = new AsyncImageGetter(mHeaderImageView);
         asyncImageGetter.loadForImageView(article.getCoverURL());
 

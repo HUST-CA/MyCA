@@ -1,7 +1,10 @@
 package com.hustca.app;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,7 @@ public class ArticleCardListAdapter extends BaseAdapter {
 
     private ArrayList<Article> mArticles;
     private Context mContext;
+    private Activity mActivity; // Shared Element Transition
 
     // Each view shares this listener
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -40,12 +44,23 @@ public class ArticleCardListAdapter extends BaseAdapter {
             // Here we just starts the activity, like we are in portrait
             Intent intent = new Intent(mContext, NewsBrowserActivity.class);
             intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
-            mContext.startActivity(intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity, v, "header");
+                mContext.startActivity(intent, options.toBundle());
+            } else {
+                mContext.startActivity(intent);
+            }
         }
     };
 
     public ArticleCardListAdapter(Context context) {
         mContext = context;
+        mArticles = new ArrayList<>();
+    }
+
+    public ArticleCardListAdapter(Activity activity) {
+        mContext = activity;
+        mActivity = activity;
         mArticles = new ArrayList<>();
     }
 

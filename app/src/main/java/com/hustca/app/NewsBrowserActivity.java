@@ -1,8 +1,9 @@
 package com.hustca.app;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +11,7 @@ import android.view.MenuItem;
 import com.hustca.app.fragments.NewsBrowserFragment;
 
 
-public class NewsBrowserActivity extends AppCompatActivity {
+public class NewsBrowserActivity extends Activity {
 
     private static final String LOG_TAG = "MyCA_NewsBrowserACT";
     /* This boolean is to keep only one frag is shown during multi-tasking */
@@ -18,8 +19,11 @@ public class NewsBrowserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_browser);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            postponeEnterTransition();
+        }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
