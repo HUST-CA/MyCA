@@ -142,47 +142,54 @@ public class MainActivity extends AppCompatActivity {
     private void setNavigationMenuListener() {
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                FragmentType fragToSwitch;
+            public boolean onNavigationItemSelected(final MenuItem menuItem) {
+                final int id = menuItem.getItemId();
 
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                switch (id) {
-                    case R.id.menu_recent_act:
-                        fragToSwitch = FragmentType.FRAGMENT_RECENT_ACTIVITIES;
-                        break;
-                    case R.id.menu_history:
-                        fragToSwitch = FragmentType.FRAGMENT_HISTORY;
-                        break;
-                    case R.id.menu_news:
-                        fragToSwitch = FragmentType.FRAGMENT_NEWS;
-                        break;
-                    case R.id.menu_h2o:
-                        fragToSwitch = FragmentType.FRAGMENT_H2O;
-                        break;
+
+                // Give the drawer 260ms to retract or it may cause glitch even on 3GB RAM with S801AC
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        FragmentType fragToSwitch = FragmentType.FRAGMENT_RECENT_ACTIVITIES;
+                        switch (id) {
+                            case R.id.menu_recent_act:
+                                fragToSwitch = FragmentType.FRAGMENT_RECENT_ACTIVITIES;
+                                break;
+                            case R.id.menu_history:
+                                fragToSwitch = FragmentType.FRAGMENT_HISTORY;
+                                break;
+                            case R.id.menu_news:
+                                fragToSwitch = FragmentType.FRAGMENT_NEWS;
+                                break;
+                            case R.id.menu_h2o:
+                                fragToSwitch = FragmentType.FRAGMENT_H2O;
+                                break;
                     /* Following can't be handled with FragmentType */
-                    case R.id.menu_settings:
-                        Intent intent = new Intent();
-                        intent.setClass(getApplicationContext(), SettingsActivity.class);
-                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                            startActivity(intent,
-                                    ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
-                        } else {
-                            startActivity(intent);
+                            case R.id.menu_settings:
+                                Intent intent = new Intent();
+                                intent.setClass(getApplicationContext(), SettingsActivity.class);
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                                    startActivity(intent,
+                                            ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
+                                } else {
+                                    startActivity(intent);
+                                }
+                                break;
+                            case R.id.menu_about:
+                                // TODO About
+                                break;
+                            case R.id.menu_switch_org:
+                                // TODO
+                                break;
+                            default:
+                                Log.wtf(LOG_TAG, "drawerMenu: unknown menu: " + menuItem.toString());
                         }
-                        return true;
-                    case R.id.menu_about:
-                        // TODO About
-                        return true;
-                    case R.id.menu_switch_org:
-                        // TODO
-                        return true;
-                    default:
-                        Log.wtf(LOG_TAG, "drawerMenu: unknown menu: " + menuItem.toString());
-                        return true;
-                }
-                switchToFragment(fragToSwitch);
+                        switchToFragment(fragToSwitch);
+                    }
+                }, 260);
+
                 return true;
             }
         });
