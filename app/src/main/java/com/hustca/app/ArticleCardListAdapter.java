@@ -40,12 +40,16 @@ public class ArticleCardListAdapter extends BaseAdapter {
         @Override
         public void onClick(View v) {
             Article article = ((CardViewHolder) v.getTag()).relatedArticle;
+            ImageView image = ((CardViewHolder) v.getTag()).imageView;
+
             // TODO Use different method to launch browser on landscape/tablets
             // Here we just starts the activity, like we are in portrait
             Intent intent = new Intent(mContext, NewsBrowserActivity.class);
             intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity, v, "header");
+                // Don't use v as 2nd param, otherwise the animation will be misplaced.
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                        mActivity, image, "header");
                 mContext.startActivity(intent, options.toBundle());
             } else {
                 mContext.startActivity(intent);
