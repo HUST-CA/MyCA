@@ -59,6 +59,10 @@ public class Article implements Parcelable {
      * URL of cover picture. Should be specified by server side.
      */
     private String mCoverURL;
+    /**
+     * Place of interest :-)
+     */
+    private String mLocation;
 
     protected Article(Parcel in) {
         mId = in.readInt();
@@ -67,6 +71,7 @@ public class Article implements Parcelable {
         mSummary = in.readString();
         mContentURL = in.readString();
         mCoverURL = in.readString();
+        mLocation = in.readString();
     }
 
     public Article() {
@@ -170,6 +175,7 @@ public class Article implements Parcelable {
         dest.writeString(mSummary);
         dest.writeString(mContentURL);
         dest.writeString(mCoverURL);
+        dest.writeString(mLocation);
     }
 
     public enum ArticleType {
