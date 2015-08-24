@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     Fragment mCurrentFragment;
     NavigationView mNavigationView;
+    DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.drawer_navigation_view);
         setNavigationMenuListener();
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
 
     /**
@@ -140,6 +145,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
                 FragmentType fragToSwitch;
+
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 switch (id) {
                     case R.id.menu_recent_act:
                         fragToSwitch = FragmentType.FRAGMENT_RECENT_ACTIVITIES;
@@ -166,18 +174,15 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.menu_about:
                         // TODO About
-                        menuItem.setChecked(true);
                         return true;
                     case R.id.menu_switch_org:
                         // TODO
-                        menuItem.setChecked(true);
                         return true;
                     default:
                         Log.wtf(LOG_TAG, "drawerMenu: unknown menu: " + menuItem.toString());
                         return true;
                 }
                 switchToFragment(fragToSwitch);
-                menuItem.setChecked(true);
                 return true;
             }
         });
