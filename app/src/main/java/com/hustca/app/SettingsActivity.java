@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             getWindow().setEnterTransition(new Explode());
-            getWindow().setExitTransition(new Explode());
+            getWindow().setReturnTransition(new Explode());
         }
 
         super.onCreate(savedInstanceState);
