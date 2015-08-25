@@ -3,6 +3,7 @@ package com.hustca.app.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,10 @@ public abstract class CardListBaseFragment extends Fragment {
      * S2R layout in the fragment
      */
     private SwipeRefreshLayout mSwipeToRefreshLayout;
+    /**
+     * RecyclerView in the layout
+     */
+    private RecyclerView mRecyclerView;
 
     /**
      * Used for refreshing data by S2R.
@@ -43,16 +48,18 @@ public abstract class CardListBaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.card_list, container, false);
-        RecyclerView rv = (RecyclerView) v.findViewById(R.id.list_of_cards);
 
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.list_of_cards);
         mAdapter = new ArticleCardListAdapter(getActivity());
         RecyclerView.LayoutManager lm = new LinearLayoutManager(getActivity());
         RecyclerView.ItemDecoration id = new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(lm);
-        rv.setAdapter(mAdapter);
-        rv.addItemDecoration(id);
+        RecyclerView.ItemAnimator ia = new DefaultItemAnimator();
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(lm);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(id);
+        mRecyclerView.setItemAnimator(ia);
 
         mSwipeToRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_to_refresh_container);
         mSwipeToRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -67,6 +74,10 @@ public abstract class CardListBaseFragment extends Fragment {
 
     protected ArticleCardListAdapter getListAdapter() {
         return mAdapter;
+    }
+
+    protected RecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
     protected void setRefreshingIndicator(boolean refreshing) {

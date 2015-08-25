@@ -24,7 +24,12 @@ public class RecentActivitiesFragment extends CardListBaseFragment {
         article.setCoverURL("http://e.hiphotos.baidu.com/image/pic/item/a71ea8d3fd1f41342b85c597261f95cad0c85ead.jpg");
         article.setContentURL("http://www.hustca.com");
         getListAdapter().add(article);
-        getListAdapter().notifyDataSetChanged();
+        // I don't know why after notifyItemInserted the list is not at the top.
+        // (so we can't see the animation)
+        // Since we are S2R'ing, we can be sure that we are at the top.
+        // So scrollToTop to show the animation.
+        getRecyclerView().smoothScrollToPosition(0);
+        getListAdapter().notifyItemInserted(0);
         setRefreshingIndicator(false);
     }
 
