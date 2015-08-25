@@ -24,5 +24,6 @@ dependencies {
     compile files('libs/jpush-sdk-release1.8.0.jar')
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
 }

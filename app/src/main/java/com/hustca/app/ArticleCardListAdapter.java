@@ -2,13 +2,12 @@ package com.hustca.app;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,55 +28,33 @@ import java.util.Collections;
  * <strong>ATTENTION! </strong> Data should be sorted time-descending.
  * mArticles[0] should be the latest one.
  */
-public class ArticleCardListAdapter extends BaseAdapter {
+public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardListAdapter.CardViewHolder> {
 
     private ArrayList<Article> mArticles;
-    private Context mContext;
     private Activity mActivity; // Shared Element Transition
 
-    // Each view shares this listener
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Article article = ((CardViewHolder) v.getTag()).relatedArticle;
-            ImageView image = ((CardViewHolder) v.getTag()).imageView;
-
-            // TODO Use different method to launch browser on landscape/tablets
-            // Here we just starts the activity, like we are in portrait
-            Intent intent = new Intent(mContext, NewsBrowserActivity.class);
-            intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, article);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // Don't use v as 2nd param, otherwise the animation will be misplaced.
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                        mActivity, image, "header");
-                mContext.startActivity(intent, options.toBundle());
-            } else {
-                mContext.startActivity(intent);
-            }
-        }
-    };
-
-    public ArticleCardListAdapter(Context context) {
-        mContext = context;
-        mArticles = new ArrayList<>();
-    }
-
     public ArticleCardListAdapter(Activity activity) {
-        mContext = activity;
         mActivity = activity;
         mArticles = new ArrayList<>();
     }
 
     @Override
-    public int getCount() {
-        return mArticles.size();
+    public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_item, viewGroup, false);
+        return new CardViewHolder(v);
     }
 
     @Override
-    public Object getItem(int position) {
-        if (position < 0 || position > mArticles.size())
-            return null;
-        return mArticles.get(position);
+    public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
+        Article article = mArticles.get(i);
+        cardViewHolder.titleText.setText(article.getTitle());
+        cardViewHolder.summaryText.setText(article.getSummary());
+        cardViewHolder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
+                article.getPublishTime()));
+        cardViewHolder.relatedArticle = article;
+
+        AsyncImageGetter getter = new AsyncImageGetter(cardViewHolder.imageView);
+        getter.loadForImageView(article.getCoverURL());
     }
 
     @Override
@@ -85,6 +62,12 @@ public class ArticleCardListAdapter extends BaseAdapter {
         return position;
     }
 
+    @Override
+    public int getItemCount() {
+        return mArticles.size();
+    }
+
+    /*
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         CardViewHolder holder;
@@ -116,7 +99,7 @@ public class ArticleCardListAdapter extends BaseAdapter {
         getter.loadForImageView(article.getCoverURL());
 
         return convertView;
-    }
+    } */
 
     /**
      * Clear all data in this list.
@@ -151,13 +134,42 @@ public class ArticleCardListAdapter extends BaseAdapter {
     }
 
     /**
-     * This class will be set as tag for each view.
+     * No more tags. We have RecyclerView!
      */
-    private class CardViewHolder {
+    public class CardViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView titleText;
         TextView summaryText;
         TextView timeAndPlaceText;
         Article relatedArticle;
+
+        private View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Use different method to launch browser on landscape/tablets
+                // Here we just starts the activity, like we are in portrait
+                Intent intent = new Intent(mActivity, NewsBrowserActivity.class);
+                intent.putExtra(NewsBrowserFragment.KEY_ARTICLE_BUNDLE, relatedArticle);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Don't use v as 2nd param, otherwise the animation will be misplaced.
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                            mActivity, imageView, "header");
+                    mActivity.startActivity(intent, options.toBundle());
+                } else {
+                    mActivity.startActivity(intent);
+                }
+            }
+        };
+
+        public CardViewHolder(View itemView) {
+            super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.image_card);
+            summaryText = (TextView) itemView.findViewById(R.id.text_card_summary);
+            timeAndPlaceText = (TextView) itemView.findViewById(R.id.text_card_time);
+            titleText = (TextView) itemView.findViewById(R.id.text_card_title);
+            itemView.setOnClickListener(onClickListener);
+        }
     }
+
+
 }
