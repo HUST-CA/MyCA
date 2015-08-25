@@ -15,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.State;
-import android.view.View;
 
 import com.hustca.app.R;
 
@@ -23,6 +22,8 @@ import com.hustca.app.R;
  * This class is from the v7 samples of the Android SDK. It's not by me!
  * <p/>
  * See the license above for details.
+ * <p/>
+ * This decorator will draw divider BEFORE each item. (R.drawable.list_divider needed)
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
@@ -57,10 +58,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final int right = parent.getWidth() - parent.getPaddingRight();
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            android.support.v7.widget.RecyclerView v = new android.support.v7.widget.RecyclerView(parent.getContext());
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int top = child.getBottom() + params.bottomMargin;
+            final int top = 0;
             final int bottom = top + mDivider.getIntrinsicHeight();
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
@@ -72,10 +70,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int left = child.getRight() + params.rightMargin;
-            final int right = left + mDivider.getIntrinsicHeight();
+            final int left = 0;
+            final int right = left + mDivider.getIntrinsicWidth(); // originally getIntrinsicHeight()
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
         }
@@ -84,16 +80,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
         if (mOrientation == VERTICAL_LIST) {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+            outRect.set(0, mDivider.getIntrinsicHeight(), 0, 0);
         } else {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
+            outRect.set(mDivider.getIntrinsicWidth(), 0, 0, 0);
         }
     }
-
-    /*
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-    } */
-
 }
