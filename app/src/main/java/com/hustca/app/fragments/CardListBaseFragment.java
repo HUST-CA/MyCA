@@ -55,7 +55,6 @@ public abstract class CardListBaseFragment extends Fragment {
         RecyclerView.ItemDecoration id = new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST);
         RecyclerView.ItemAnimator ia = new DefaultItemAnimator();
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(lm);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(id);
@@ -68,7 +67,10 @@ public abstract class CardListBaseFragment extends Fragment {
                 refresh();
             }
         });
-
+        mSwipeToRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light);
         return v;
     }
 
