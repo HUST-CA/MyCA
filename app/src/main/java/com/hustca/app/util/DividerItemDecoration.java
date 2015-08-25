@@ -27,14 +27,12 @@ import com.hustca.app.R;
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-    private static final int[] ATTRS = new int[]{R.drawable.list_divider};
     private Drawable mDivider;
     private int mOrientation;
 
     public DividerItemDecoration(Context context, int orientation) {
-        //final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        // TODO move this line out of this class
         mDivider = context.getResources().getDrawable(R.drawable.list_divider);
-        //a.recycle();
         setOrientation(orientation);
     }
 
