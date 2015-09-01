@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -146,9 +145,8 @@ public class MainActivity extends AppCompatActivity {
                 final int id = menuItem.getItemId();
 
                 menuItem.setChecked(true);
-                mDrawerLayout.closeDrawer(GravityCompat.START);
 
-                // Give the drawer 260ms to retract or it may cause glitch even on 3GB RAM with S801AC
+                // Give the drawer 235ms to retract or it may cause glitch even on 3GB RAM with S801AC
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -188,8 +186,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                         switchToFragment(fragToSwitch);
                     }
-                }, 260);
+                }, 235);
 
+                mDrawerLayout.closeDrawers();
                 return true;
             }
         });
