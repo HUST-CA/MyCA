@@ -16,4 +16,6 @@
     <string name="enable_push">Enable Push</string>
     <string name="enable_push_sound">Ring</string>
     <string name="enable_push_vibrate">Vibration</string>
+    <string name="summary_push_off">Push services are completely disabled now</string>
+    <string name="summary_push_on">Do you like me? Yes~ Thank you very much.</string>
 </resources>

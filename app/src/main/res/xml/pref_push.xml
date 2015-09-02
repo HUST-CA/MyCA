@@ -3,6 +3,8 @@
     <PreferenceCategory android:title="@string/push_settings">
         <CheckBoxPreference
             android:key="push_enabled"
+            android:summaryOff="@string/summary_push_off"
+            android:summaryOn="@string/summary_push_on"
             android:title="@string/enable_push">
         </CheckBoxPreference>
 

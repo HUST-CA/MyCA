@@ -15,4 +15,6 @@
     <string name="enable_push_sound">有新推送时响铃</string>
     <string name="enable_push_vibrate">有新推送时震动</string>
     <string name="push_settings">推送设置</string>
+    <string name="summary_push_off">推送服务真的已经禁用了！不信去问PM！</string>
+    <string name="summary_push_on">Do you like me? Yes~ Thank you very much.</string>
 </resources>
