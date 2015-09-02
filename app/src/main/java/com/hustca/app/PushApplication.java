@@ -15,7 +15,6 @@ public class PushApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
     }
 }
