@@ -18,4 +18,6 @@
     <string name="enable_push_vibrate">Vibration</string>
     <string name="summary_push_off">Push services are completely disabled now</string>
     <string name="summary_push_on">Do you like me? Yes~ Thank you very much.</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="open_drawer">Open Drawer</string>
 </resources>
