@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.menu_settings:
                                 Intent intent = new Intent();
                                 intent.setClass(getApplicationContext(), SettingsActivity.class);
-                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     startActivity(intent,
                                             ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
                                 } else {

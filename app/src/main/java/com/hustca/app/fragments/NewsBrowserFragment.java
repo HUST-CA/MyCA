@@ -83,7 +83,7 @@ public class NewsBrowserFragment extends Fragment {
             @Override
             public boolean onPreDraw() {
                 mHeaderImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getActivity().startPostponedEnterTransition();
                 }
                 return true;
