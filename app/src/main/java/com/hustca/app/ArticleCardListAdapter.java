@@ -67,40 +67,6 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
         return mArticles.size();
     }
 
-    /*
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        CardViewHolder holder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.card_item, parent, false);
-            holder = new CardViewHolder();
-            holder.imageView = (ImageView) convertView.findViewById(R.id.image_card);
-            holder.summaryText = (TextView) convertView.findViewById(R.id.text_card_summary);
-            holder.timeAndPlaceText = (TextView) convertView.findViewById(R.id.text_card_time);
-            holder.titleText = (TextView) convertView.findViewById(R.id.text_card_title);
-            convertView.setTag(holder);
-        } else {
-            // Each time we created a new view, we attach a tag
-            // so there's no view without a tag
-            // If there is, blame later programmers.
-            holder = (CardViewHolder) convertView.getTag();
-        }
-
-        Article article = mArticles.get(position);
-        holder.titleText.setText(article.getTitle());
-        holder.summaryText.setText(article.getSummary());
-        holder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
-                article.getPublishTime()));
-        holder.relatedArticle = article;
-        convertView.setOnClickListener(onClickListener);
-
-        // Loading pic is drawn here
-        AsyncImageGetter getter = new AsyncImageGetter(holder.imageView);
-        getter.loadForImageView(article.getCoverURL());
-
-        return convertView;
-    } */
-
     /**
      * Clear all data in this list.
      * Remember to notifyDataSetChanged()
