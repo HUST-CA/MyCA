@@ -23,10 +23,10 @@ public class AsyncTextLoader extends AsyncLoader {
     private static final String LOG_TAG = "MyCA_AsyncContent";
 
     private Context mContext;
-    private CallbackOnLoadFinished mCallback;
+    private OnFinishListener mCallback;
     private String mReturningString;
 
-    public AsyncTextLoader(Context context, CallbackOnLoadFinished cb) {
+    public AsyncTextLoader(Context context, OnFinishListener cb) {
         mContext = context;
         mCallback = cb;
     }
@@ -93,7 +93,7 @@ public class AsyncTextLoader extends AsyncLoader {
     /**
      * What do to after the content has been loaded.
      */
-    public interface CallbackOnLoadFinished {
+    public interface OnFinishListener {
         void onFinish(String content);
     }
 }
