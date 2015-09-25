@@ -1,4 +1,4 @@
-package com.hustca.app.util;
+package com.hustca.app.util.networking;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hustca.app.R;
+import com.hustca.app.util.BitmapDrawableContainer;
 
 import java.io.File;
 import java.io.InputStream;

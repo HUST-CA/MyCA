@@ -1,4 +1,4 @@
-package com.hustca.app.util;
+package com.hustca.app.util.networking;
 
 import android.os.AsyncTask;
 import android.util.Log;

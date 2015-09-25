@@ -1,4 +1,4 @@
-package com.hustca.app.util;
+package com.hustca.app.util.networking;
 
 import android.util.Log;
 

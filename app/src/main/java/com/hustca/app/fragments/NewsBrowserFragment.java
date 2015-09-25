@@ -22,7 +22,7 @@ import android.widget.ProgressBar;
 
 import com.hustca.app.Article;
 import com.hustca.app.R;
-import com.hustca.app.util.AsyncImageGetter;
+import com.hustca.app.util.networking.AsyncImageGetter;
 
 /**
  * Created by Hamster on 2015/8/2.
