@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hustca.app.activities.NewsBrowserActivity;
 import com.hustca.app.fragments.NewsBrowserFragment;
 import com.hustca.app.util.AsyncImageGetter;
 

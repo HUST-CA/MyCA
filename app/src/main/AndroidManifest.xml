@@ -29,7 +29,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme.SolidStatusBar">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -39,23 +39,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewsBrowserActivity"
+            android:name=".activities.NewsBrowserActivity"
             android:label="@string/title_activity_content_browser"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hustca.app.MainActivity"/>
+                android:value=".activities.MainActivity"/>
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/action_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activities.MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hustca.app.MainActivity"/>
+                android:value=".activities.MainActivity"/>
         </activity>
 
         <!-- JPush Required -->

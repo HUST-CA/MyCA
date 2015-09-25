@@ -1,4 +1,4 @@
-package com.hustca.app;
+package com.hustca.app.activities;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.hustca.app.Article;
+import com.hustca.app.R;
 import com.hustca.app.fragments.NewsBrowserFragment;
 
 

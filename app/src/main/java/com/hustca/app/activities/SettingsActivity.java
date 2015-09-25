@@ -1,4 +1,4 @@
-package com.hustca.app;
+package com.hustca.app.activities;
 
 import android.app.FragmentTransaction;
 import android.graphics.Color;
@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.view.Window;
 
+import com.hustca.app.PushApplication;
+import com.hustca.app.R;
 import com.hustca.app.fragments.SettingsFragment;
 
 /**

@@ -1,4 +1,4 @@
-package com.hustca.app;
+package com.hustca.app.activities;
 
 import android.app.ActivityOptions;
 import android.app.Fragment;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.hustca.app.R;
 import com.hustca.app.fragments.HistoryFragment;
 import com.hustca.app.fragments.NewsFragment;
 import com.hustca.app.fragments.RecentActivitiesFragment;
