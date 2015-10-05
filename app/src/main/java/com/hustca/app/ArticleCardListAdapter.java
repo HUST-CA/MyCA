@@ -93,6 +93,16 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
     }
 
     /**
+     * Add one entry to the beginning.
+     * NOTE: Compare with previous data
+     * TODO Shall we make the judgment here?
+     * Remember to notifyDataSetChanged()
+     */
+    public void add(ArrayList<Article> articles) {
+        mArticles.addAll(articles);
+    }
+
+    /**
      * Remove one entry
      * Remember to notifyDataSetChanged()
      */

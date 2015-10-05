@@ -2,8 +2,17 @@ package com.hustca.app.fragments;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hustca.app.Article;
+import com.hustca.app.util.RSSParser;
+import com.hustca.app.util.networking.AsyncTextLoader;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Hamster on 2015/7/26.
@@ -12,25 +21,33 @@ import com.hustca.app.Article;
  */
 public class RecentActivitiesFragment extends CardListBaseFragment {
 
+    private static final String URL = "http://www.ifanr.com/feed";
+
     public void refresh() {
         setRefreshingIndicator(true);
-        // TODO
-        // This is simulation
-        Article article = new Article();
-        article.setTitle("协会第一届摄影大赛作品展览");
-        article.setSummary("比赛于今日闭幕，以下为参赛作品一览，请为您支持的作品投一票……");
-        article.setPublishTime(System.currentTimeMillis());
-        // Random pic on search engine
-        article.setCoverURL("http://e.hiphotos.baidu.com/image/pic/item/a71ea8d3fd1f41342b85c597261f95cad0c85ead.jpg");
-        article.setContentURL("http://www.hustca.com");
-        getListAdapter().add(article);
-        // I don't know why after notifyItemInserted the list is not at the top.
-        // (so we can't see the animation)
-        // Since we are S2R'ing, we can be sure that we are at the top.
-        // So scrollToTop to show the animation.
-        getRecyclerView().smoothScrollToPosition(0);
-        getListAdapter().notifyItemInserted(0);
-        setRefreshingIndicator(false);
+        AsyncTextLoader.OnFinishListener listener = new AsyncTextLoader.OnFinishListener() {
+            @Override
+            public void onFinish(String content) {
+                RSSParser parser = new RSSParser();
+                ArrayList<Article> articles = null;
+                try {
+                    articles = parser.parse(new ByteArrayInputStream(content.getBytes()));
+                } catch (XmlPullParserException e) {
+                    Toast.makeText(RecentActivitiesFragment.this.getActivity(), "XML Malformed", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(RecentActivitiesFragment.this.getActivity(), "Read error", Toast.LENGTH_SHORT).show();
+                }
+                if (articles != null) {
+                    // no error
+                    getRecyclerView().smoothScrollToPosition(0);
+                    getListAdapter().add(articles);
+                    getListAdapter().notifyItemRangeInserted(0, articles.size());
+                    setRefreshingIndicator(false);
+                }
+            }
+        };
+        AsyncTextLoader textLoader = new AsyncTextLoader(this.getActivity(), listener);
+        textLoader.execute(URL);
     }
 
     @Override
