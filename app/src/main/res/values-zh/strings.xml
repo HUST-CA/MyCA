@@ -17,4 +17,7 @@
     <string name="push_settings">推送设置</string>
     <string name="summary_push_off">推送服务真的已经禁用了！不信去问PM！</string>
     <string name="summary_push_on">Do you like me? Yes~ Thank you very much.</string>
+    <string name="close_drawer">关闭抽屉</string>
+    <string name="open_drawer">打开抽屉</string>
+    <string name="title_activity_content_browser">ContentBrowserActivity</string>
 </resources>

@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class RecentActivitiesFragment extends CardListBaseFragment {
 
-    private static final String URL = "http://www.ifanr.com/feed";
+    private static final String URL = "http://www.hustca.com/news/feed";
 
     public void refresh() {
         setRefreshingIndicator(true);

@@ -118,9 +118,13 @@ public class RSSParser {
      * Done by searching "src="" and locating another quote.
      *
      * @param in Input string.
-     * @return Found image URL. NULL if no pic is found.
+     * @return Found image URL. NULL if no pic is found or input string is empty.
      */
     private String getFirstPicLink(String in) {
+        if (null == in || in.isEmpty()) {
+            Log.w(LOG_TAG, "Got an empty string/null in getFirstPicLink");
+            return null;
+        }
         int firstQuote = in.indexOf("src=\"");
         int nextQuote = in.indexOf("\"", firstQuote + 5);
         if (firstQuote == -1 || nextQuote == -1) {
