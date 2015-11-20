@@ -109,8 +109,12 @@ public class AsyncImageGetter implements Html.ImageGetter {
      * @param source URL
      */
     public void loadForImageView(String source) {
-        if (mImageView == null || source == null) {
-            Log.e(LOG_TAG, "loadForImageView: mImageView or source is null. Returning.");
+        if (null == mImageView) {
+            Log.e(LOG_TAG, "loadForImageView: mImageView is null. Returning.");
+            return;
+        }
+        if (null == source) {
+            Log.d(LOG_TAG, "loadForImageView: source is null. Returning.");
             return;
         }
 
