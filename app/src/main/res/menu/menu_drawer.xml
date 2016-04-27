@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu_group_fragments"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/menu_recent_act"
             android:checked="true"
@@ -20,17 +22,17 @@
             android:title="@string/h2o_world" />
     </group>
 
-    <item android:title="@string/drawer_submenu_title">
-        <menu>
-            <item
-                android:id="@+id/menu_settings"
-                android:title="@string/action_settings" />
-            <item
-                android:id="@+id/menu_switch_org"
-                android:title="@string/switch_assoc" />
-            <item
-                android:id="@+id/menu_about"
-                android:title="@string/about" />
-        </menu>
-    </item>
+    <group
+        android:id="@+id/menu_group_common"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_settings"
+            android:title="@string/action_settings" />
+        <item
+            android:id="@+id/menu_switch_org"
+            android:title="@string/switch_assoc" />
+        <item
+            android:id="@+id/menu_about"
+            android:title="@string/about" />
+    </group>
 </menu>
