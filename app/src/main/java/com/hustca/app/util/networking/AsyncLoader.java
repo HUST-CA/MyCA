@@ -72,9 +72,10 @@ public abstract class AsyncLoader extends AsyncTask<String, Void, InputStream> {
             if (conn.getResponseCode() == 200) {
                 in = conn.getInputStream();
             } else {
-                Log.e(LOG_TAG, "AsyncLoader: URL does not return 200: " + conn.getResponseCode());
-                // TODO notify
-                return null;
+                String errMsg = "AsyncLoader: URL does not return 200: "
+                        + conn.getResponseCode() + " " + conn.getResponseMessage();
+                Log.e(LOG_TAG, errMsg);
+                throw new IOException(errMsg);
             }
         } catch (IOException e) {
             exceptionHandler(e);

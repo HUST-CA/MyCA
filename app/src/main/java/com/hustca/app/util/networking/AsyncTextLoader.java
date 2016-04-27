@@ -50,6 +50,10 @@ public class AsyncTextLoader extends AsyncLoader {
     protected InputStream doInBackground(String... param) {
         InputStream inputStream = super.doInBackground(param);
 
+        if (inputStream == null) {
+            return null; // Error during HTTP request. Exception should be handled.
+        }
+
         BufferedReader br;
         try {
             br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
