@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,8 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
     public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
         Article article = mArticles.get(i);
         cardViewHolder.titleText.setText(article.getTitle());
-        cardViewHolder.summaryText.setText(article.getSummary());
+        cardViewHolder.summaryText.setText(Html.fromHtml(article.getSummary())
+                .toString().replace((char)65532, (char)32)); // Strip [OBJ](65532)
         cardViewHolder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
                 article.getPublishTime()));
         cardViewHolder.relatedArticle = article;
