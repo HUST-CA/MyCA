@@ -36,7 +36,6 @@ public class RSSParser {
     private static final String RSS_CONTENT_URL = "guid"; // "link" is not safe for Chinese title
     private static final String RSS_SUMMARY = "description";
     private static final String RSS_DATE = "pubDate";
-    private static final String RSS_CONTENT = "encoded"; // content:encoded
 
     /**
      * Date format for pubDate.
@@ -74,7 +73,9 @@ public class RSSParser {
                             articleBuf.setContentURL(parser.getText());
                         } else if (parser.getName().equals(RSS_SUMMARY)) {
                             parser.next();
-                            articleBuf.setSummary(parser.getText());
+                            String desc = parser.getText();
+                            articleBuf.setSummary(desc);
+                            articleBuf.setCoverURL(getFirstPicLink(desc));
                         } else if (parser.getName().equals(RSS_AUTHOR)) {
                             parser.next();
                             articleBuf.setAuthor(new User(parser.getText(), User.INVALID_USER_ID));
@@ -89,11 +90,6 @@ public class RSSParser {
                                         + e.getLocalizedMessage());
                                 articleBuf.setPublishTime(System.currentTimeMillis());
                             }
-                        } else if (parser.getName().equals(RSS_CONTENT)) {
-                            // TODO Find first pic or use default one or change theme
-                            parser.next();
-                            String tmp = parser.getText();
-                            articleBuf.setCoverURL(getFirstPicLink(tmp));
                         }
                     }
                     if (articleBuf == null && parser.getName().equals(RSS_ITEM)) {

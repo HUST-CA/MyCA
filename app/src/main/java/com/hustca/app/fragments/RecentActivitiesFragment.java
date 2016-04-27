@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class RecentActivitiesFragment extends CardListBaseFragment {
 
-    private static final String URL = "http://www.hustca.com/news/feed";
+    private static final String URL = "http://www.hustca.com/hustca/feed";
 
     public void refresh() {
         setRefreshingIndicator(true);
@@ -33,15 +33,16 @@ public class RecentActivitiesFragment extends CardListBaseFragment {
                 try {
                     articles = parser.parse(new ByteArrayInputStream(content.getBytes()));
                 } catch (XmlPullParserException e) {
+                    e.printStackTrace();
                     Toast.makeText(RecentActivitiesFragment.this.getActivity(), "XML Malformed", Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
+                    e.printStackTrace();
                     Toast.makeText(RecentActivitiesFragment.this.getActivity(), "Read error", Toast.LENGTH_SHORT).show();
                 }
                 if (articles != null) {
                     // no error
-                    getRecyclerView().smoothScrollToPosition(0);
                     getListAdapter().add(articles);
-                    getListAdapter().notifyItemRangeInserted(0, articles.size());
+                    getRecyclerView().smoothScrollToPosition(0);
                     setRefreshingIndicator(false);
                 }
             }
