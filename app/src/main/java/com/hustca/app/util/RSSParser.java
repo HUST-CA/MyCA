@@ -33,7 +33,7 @@ public class RSSParser {
     private static final String RSS_ITEM = "item";
     private static final String RSS_TITLE = "title";
     private static final String RSS_AUTHOR = "creator"; // dc:creator
-    private static final String RSS_CONTENT_URL = "guid"; // "link" is not safe for Chinese title
+    private static final String RSS_CONTENT_URL = "link";
     private static final String RSS_SUMMARY = "description";
     private static final String RSS_DATE = "pubDate";
 
