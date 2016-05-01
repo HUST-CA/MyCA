@@ -1,6 +1,7 @@
 package com.hustca.app.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -54,7 +55,14 @@ public class RecentActivitiesFragment extends CardListBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        refresh(); // load on boot
+        /* TODO Why shall we delay? Otherwise the loading animation won't be shown
+        So why doesn't it get shown if run directly?
+         */
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refresh();
+            }
+        }, 100);
     }
-
 }

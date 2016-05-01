@@ -80,6 +80,7 @@ public class PlainBrowserFragment extends Fragment {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
+        /* Enable LocalStorage, for Discuz wsg.qq.com */
         mWebView.getSettings().setDomStorageEnabled(true);
         String appCachePath = getActivity().getCacheDir().getAbsolutePath();
         mWebView.getSettings().setAppCachePath(appCachePath);
