@@ -46,24 +46,6 @@
         android:transitionGroup="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <WebView
-                android:id="@+id/news_browser_web"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- -7dp margin is to make the bar stick to the bottom of image -->
-            <ProgressBar
-                android:id="@+id/news_browser_progress"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-7dp"
-                android:visibility="invisible"/>
-        </FrameLayout>
-
+        <include layout="@layout/plain_browser" />
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

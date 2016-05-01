@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hustca.app.R;
+import com.hustca.app.fragments.BBSFragment;
 import com.hustca.app.fragments.HistoryFragment;
 import com.hustca.app.fragments.NewsFragment;
 import com.hustca.app.fragments.RecentActivitiesFragment;
@@ -82,10 +83,13 @@ public class MainActivity extends AppCompatActivity {
                 else
                     newFragment = new NewsFragment();
                 break;
-            case FRAGMENT_H2O:
-                // TODO Implement this frag
-                // break;
-                return;
+            case FRAGMENT_BBS:
+                if (mCurrentFragment instanceof BBSFragment) {
+                    return;
+                } else {
+                    newFragment = new BBSFragment();
+                }
+                break;
             default:
                 Log.wtf(LOG_TAG, "switchToFragment: unknown frag type: " + fragmentType);
                 return;
@@ -170,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragToSwitch = FragmentType.FRAGMENT_NEWS;
                                 break;
                             case R.id.menu_h2o:
-                                fragToSwitch = FragmentType.FRAGMENT_H2O;
+                                fragToSwitch = FragmentType.FRAGMENT_BBS;
                                 break;
                     /* Following can't be handled with FragmentType */
                             case R.id.menu_settings:
@@ -229,6 +233,6 @@ public class MainActivity extends AppCompatActivity {
         FRAGMENT_RECENT_ACTIVITIES,
         FRAGMENT_NEWS,
         FRAGMENT_HISTORY,
-        FRAGMENT_H2O
+        FRAGMENT_BBS
     }
 }

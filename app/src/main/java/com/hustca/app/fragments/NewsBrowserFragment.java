@@ -27,7 +27,7 @@ import com.hustca.app.util.networking.AsyncImageGetter;
 /**
  * Created by Hamster on 2015/8/2.
  * <p/>
- * A fragment displaying news/history detail.
+ * A fragment displaying news/history detail, with collapsing toolbar and header image
  */
 public class NewsBrowserFragment extends Fragment {
 
@@ -48,8 +48,8 @@ public class NewsBrowserFragment extends Fragment {
         View v = inflater.inflate(R.layout.news_browser, container, false);
         mHeaderImageView = (ImageView) v.findViewById(R.id.news_browser_header_image);
         mCollapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
-        mWebView = (WebView) v.findViewById(R.id.news_browser_web);
-        mProgressBar = (ProgressBar) v.findViewById(R.id.news_browser_progress);
+        mWebView = (WebView) v.findViewById(R.id.plain_browser_webview);
+        mProgressBar = (ProgressBar) v.findViewById(R.id.plain_browser_progress);
 
         Toolbar toolbar = (Toolbar) v.findViewById(R.id.news_browser_toolbar);
         Drawable arrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
