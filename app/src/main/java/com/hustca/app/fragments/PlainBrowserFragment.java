@@ -26,8 +26,8 @@ public class PlainBrowserFragment extends Fragment {
      */
     public static final String KEY_URL = "url";
 
-    private WebView mWebView;
-    private ProgressBar mProgressBar;
+    protected WebView mWebView;
+    protected ProgressBar mProgressBar;
 
     /**
      * How to get the URL for loading in the WebView.
