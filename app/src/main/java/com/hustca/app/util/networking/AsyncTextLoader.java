@@ -91,7 +91,11 @@ public class AsyncTextLoader extends AsyncLoader {
 
     @Override
     protected void onPostExecute(InputStream inputStream) {
-        mCallback.onFinish(mReturningString);
+        if (inputStream != null) {
+            mCallback.onFinish(mReturningString);
+        } else {
+            Log.e(LOG_TAG, "onPostExecute: inputStream is null. Give up.");
+        }
     }
 
     /**
