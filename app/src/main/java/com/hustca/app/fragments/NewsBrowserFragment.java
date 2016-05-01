@@ -60,7 +60,7 @@ public class NewsBrowserFragment extends Fragment {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    NavUtils.navigateUpFromSameTask(getActivity());
+                    getActivity().onBackPressed();
                 }
             });
         }
