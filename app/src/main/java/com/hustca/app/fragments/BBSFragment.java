@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
  */
 public class BBSFragment extends PlainBrowserFragment {
     private static final String URL = "http://wsq.discuz.qq.com/?c=index&a=index&f=wx&fid=2&siteid=265482436";
-    private static final String BASE_URL = "wsq.discuz.qq.com";
+    private static final String[] BASE_URL_LIST = {"wsq.discuz.qq.com", "discuz.hustca.com"};
 
     @Override
     protected String getURL() {
@@ -22,8 +22,12 @@ public class BBSFragment extends PlainBrowserFragment {
     }
 
     @Override
-    protected String getBaseURL() {
-        return BASE_URL;
+    protected boolean shouldOpenInApp(String url) {
+        for (String baseUrl : BASE_URL_LIST) {
+            if (url.contains(baseUrl))
+                return true;
+        }
+        return false;
     }
 
     @Nullable

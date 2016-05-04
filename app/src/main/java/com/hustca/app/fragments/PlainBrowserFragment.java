@@ -40,7 +40,6 @@ public class PlainBrowserFragment extends Fragment {
     public static final String KEY_BASE_URL = "base_url";
 
     private static final String DEFAULT_BASE_URL = "www.hustca.com/hustca";
-    private String mBaseUrl;
 
     protected WebView mWebView;
     protected ProgressBar mProgressBar;
@@ -59,15 +58,20 @@ public class PlainBrowserFragment extends Fragment {
     }
 
     /**
-     * How to determine the base URL.
+     * Whether we should load this URL in the app
      * <p/>
      * By default, this method reads from the arguments and find
-     * a key named "base_url".
+     * a key named "base_url", and compare it with pre-defined base URL.
+     * If the URL to load is the "subset" of base URL, then load it within the app.
      *
-     * @return Base URL that need to be opened within app
+     * @return Whether to load the URL in the app
      */
-    protected String getBaseURL() {
-        return getArguments().getString(KEY_BASE_URL, DEFAULT_BASE_URL);
+    protected boolean shouldOpenInApp(String url) {
+        Bundle arguments = getArguments();
+        String baseUrl = DEFAULT_BASE_URL;
+        if (arguments != null)
+            baseUrl = getArguments().getString(KEY_BASE_URL, DEFAULT_BASE_URL);
+        return url.contains(baseUrl);
     }
 
     @Nullable
@@ -83,8 +87,6 @@ public class PlainBrowserFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mBaseUrl = getBaseURL();
-
         mProgressBar.setMax(100); // newProgress documentation. For later use.
         mProgressBar.setIndeterminate(true);
 
@@ -95,7 +97,7 @@ public class PlainBrowserFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.indexOf(mBaseUrl) > 0) {
+                if (shouldOpenInApp(url)) {
                     view.loadUrl(url);
                     return true;
                 } else {
@@ -132,4 +134,6 @@ public class PlainBrowserFragment extends Fragment {
         after 1st update (we got percentage) show the progress clearly.
          */
     }
+
+
 }
