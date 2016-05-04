@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String LOG_TAG = "MyCA_MA";
+    private static final String KEY_FRAGMENT_SHOWN = "fragment_shown";
 
     Fragment mCurrentFragment;
     NavigationView mNavigationView;
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = (NavigationView) findViewById(R.id.drawer_navigation_view);
         setNavigationMenuListener();
 
+        if (savedInstanceState != null)
+            mCurrentFragment = getFragmentManager().getFragment(
+                    savedInstanceState, KEY_FRAGMENT_SHOWN);
     }
 
     /**
@@ -116,13 +120,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        // Default fragment to show on boot
 
-        // Remember to set checked property in XML if you want to change this (FOR INITIAL SELECTION)
-        // getItem(0) is its index. This will affect the selection on re-launch
-        // from multi-task view or something like that.
-        mNavigationView.getMenu().getItem(0).setChecked(true);
-        switchToFragment(FragmentType.FRAGMENT_RECENT_ACTIVITIES);
+        /* If we are not resuming from saved state */
+        if (mCurrentFragment == null) {
+            /* Default fragment to show on boot
+             Remember to set checked property in XML if you want to change this (FOR INITIAL SELECTION)
+             getItem(0) is its index. This will affect the selection on re-launch
+             from multi-task view or something like that. */
+            mNavigationView.getMenu().getItem(0).setChecked(true);
+            switchToFragment(FragmentType.FRAGMENT_RECENT_ACTIVITIES);
+        }
 
         // JPush again!
         JPushInterface.onResume(this);
@@ -234,5 +241,11 @@ public class MainActivity extends AppCompatActivity {
         FRAGMENT_NEWS,
         FRAGMENT_HISTORY,
         FRAGMENT_BBS
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getFragmentManager().putFragment(outState, KEY_FRAGMENT_SHOWN, mCurrentFragment);
     }
 }
