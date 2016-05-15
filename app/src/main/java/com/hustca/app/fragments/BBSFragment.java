@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
  * BBS fragment implementation. Just a extension of PlainBrowserFragment.
  */
 public class BBSFragment extends PlainBrowserFragment {
-    private static final String URL = "http://wsq.discuz.qq.com/?c=index&a=index&f=wx&fid=2&siteid=265482436";
+    private static final String URL = "http://discuz.hustca.com";
     private static final String[] BASE_URL_LIST = {"wsq.discuz.qq.com", "discuz.hustca.com"};
 
     @Override
