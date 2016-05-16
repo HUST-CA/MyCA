@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
  */
 public class BBSFragment extends PlainBrowserFragment {
     private static final String URL = "http://discuz.hustca.com";
-    private static final String[] BASE_URL_LIST = {"wsq.discuz.qq.com", "discuz.hustca.com"};
+    private static final String[] BASE_URL_LIST = {"http://wsq.discuz.com","wsq.discuz.qq.com", "discuz.hustca.com"};
 
     @Override
     protected String getURL() {
