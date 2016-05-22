@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = (NavigationView) findViewById(R.id.drawer_navigation_view);
         setNavigationMenuListener();
 
-        if (savedInstanceState != null)
-            mCurrentFragment = getFragmentManager().getFragment(
-                    savedInstanceState, KEY_FRAGMENT_SHOWN);
+        if (savedInstanceState != null) {
+            mCurrentFragment = getFragmentManager().findFragmentByTag(KEY_FRAGMENT_SHOWN);
+        }
     }
 
     /**
@@ -103,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         // Do the real transaction
         FragmentTransaction ft = this.getFragmentManager().beginTransaction();
         if (mCurrentFragment != null)
-            ft.replace(R.id.fragment_container, newFragment);
+            ft.replace(R.id.fragment_container, newFragment, KEY_FRAGMENT_SHOWN);
         else
-            ft.add(R.id.fragment_container, newFragment);
+            ft.add(R.id.fragment_container, newFragment, KEY_FRAGMENT_SHOWN);
         ft.commit();
         mCurrentFragment = newFragment;
     }
@@ -242,12 +242,6 @@ public class MainActivity extends AppCompatActivity {
         FRAGMENT_NEWS,
         FRAGMENT_HISTORY,
         FRAGMENT_BBS
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        getFragmentManager().putFragment(outState, KEY_FRAGMENT_SHOWN, mCurrentFragment);
     }
 
     @Override
