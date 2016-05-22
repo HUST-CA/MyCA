@@ -20,6 +20,7 @@ import com.hustca.app.R;
 import com.hustca.app.fragments.BBSFragment;
 import com.hustca.app.fragments.HistoryFragment;
 import com.hustca.app.fragments.NewsFragment;
+import com.hustca.app.fragments.OnBackPressedHandler;
 import com.hustca.app.fragments.RecentActivitiesFragment;
 
 import cn.jpush.android.api.JPushInterface;
@@ -247,5 +248,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getFragmentManager().putFragment(outState, KEY_FRAGMENT_SHOWN, mCurrentFragment);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mCurrentFragment instanceof OnBackPressedHandler) {
+            if (!((OnBackPressedHandler) mCurrentFragment).onBackPressed())
+                super.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

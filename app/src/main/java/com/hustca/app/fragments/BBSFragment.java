@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
  * <p/>
  * BBS fragment implementation. Just a extension of PlainBrowserFragment.
  */
-public class BBSFragment extends PlainBrowserFragment {
+public class BBSFragment extends PlainBrowserFragment implements OnBackPressedHandler {
     private static final String URL = "http://discuz.hustca.com";
     private static final String[] BASE_URL_LIST = {"wsq.discuz.com", "discuz.hustca.com"};
 
@@ -45,5 +45,15 @@ public class BBSFragment extends PlainBrowserFragment {
             });
         }
         return v;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
