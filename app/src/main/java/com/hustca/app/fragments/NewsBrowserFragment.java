@@ -81,8 +81,7 @@ public class NewsBrowserFragment extends Fragment {
                 return true;
             }
         });
-        AsyncImageGetter asyncImageGetter = new AsyncImageGetter(mHeaderImageView);
-        asyncImageGetter.loadForImageView(article.getCoverURL());
+        AsyncImageGetter.loadForImageView(mHeaderImageView, article.getCoverURL());
 
         mCollapsingToolbar.setTitle(article.getTitle());
         // TODO Do we need to change the colors according to picture?

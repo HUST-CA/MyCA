@@ -1,11 +1,9 @@
 package com.hustca.app.util.networking;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
-import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,25 +23,18 @@ import java.io.InputStream;
 public class AsyncImageGetter {
     private static final String LOG_TAG = "MyCA_AsyncIMG";
 
-    private ImageView mImageView;
-
-    public AsyncImageGetter(ImageView iv) {
-        mImageView = iv;
-    }
-
     /**
-     * Return the file name in a url
+     * Return a unique identifier for a url in cache
      * <p/>
-     * e.g. http://www.aaa.com/index.html -> index.html
-     * https://www.bbb.com/a -> a
+     * Normally it's the file name in the URL.
+     * If no file name is available, return the hashCode of the URL.
      *
-     * @param url          URL to extract file name from
-     * @param default_name the name to return if no file name exists (http://www.a.com/)
-     * @return file name
+     * @param url          URL to get identifier
+     * @return cache identifier
      */
-    private static String getFilename(String url, String default_name) {
+    private static String getUrlIdentifier(String url) {
         int pos = url.lastIndexOf("/");
-        if (pos == -1 || pos == url.length() - 1) return default_name;
+        if (pos == -1 || pos == url.length() - 1) return String.valueOf(url.hashCode());
         else return url.substring(pos + 1);
     }
 
@@ -56,8 +47,8 @@ public class AsyncImageGetter {
      *
      * @param source URL
      */
-    public void loadForImageView(String source) {
-        if (null == mImageView) {
+    public static void loadForImageView(ImageView imageView, String source) {
+        if (null == imageView) {
             Log.e(LOG_TAG, "loadForImageView: mImageView is null. Returning.");
             return;
         }
@@ -66,20 +57,20 @@ public class AsyncImageGetter {
             return;
         }
 
-        File cacheFile = new File(mImageView.getContext().getExternalCacheDir(),
-                getFilename(source, "default"));
+        File cacheFile = new File(imageView.getContext().getExternalCacheDir(),
+                getUrlIdentifier(source));
         if (cacheFile.exists()) {
-            mImageView.setImageURI(Uri.fromFile(cacheFile));
+            imageView.setImageURI(Uri.fromFile(cacheFile));
             return;
         }
 
-        // TODO Make a loading pic here
-        mImageView.setImageResource(R.mipmap.ic_launcher);
-        AsyncLoaderForImageView loader = new AsyncLoaderForImageView(mImageView);
+        imageView.setBackgroundColor(imageView.getContext().
+                getResources().getColor(android.R.color.darker_gray));
+        AsyncLoaderForImageView loader = new AsyncLoaderForImageView(imageView);
         loader.execute(source);
     }
 
-    private class AsyncLoaderForImageView extends CachedAsyncLoader {
+    private static class AsyncLoaderForImageView extends CachedAsyncLoader {
         private ImageView mImageView;
         private Context mContext;
 
@@ -103,7 +94,7 @@ public class AsyncImageGetter {
         @Override
         protected String getCacheFileName(String source) {
             return mContext.getExternalCacheDir().getAbsolutePath()
-                    + File.separator + getFilename(source, "default");
+                    + File.separator + getUrlIdentifier(source);
         }
 
         @Override
