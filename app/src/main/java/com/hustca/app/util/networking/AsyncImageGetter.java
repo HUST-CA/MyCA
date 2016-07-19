@@ -82,8 +82,9 @@ public class AsyncImageGetter {
         @Override
         protected void onPostExecute(InputStream in) {
             if (in == null) {
-                // TODO Make an error pic
-                mImageView.setImageResource(R.mipmap.ic_launcher);
+                // TODO Use something sensible
+                mImageView.setBackgroundColor(mContext.getResources().
+                        getColor(android.R.color.darker_gray));
             } else {
                 if (mImageView != null) {
                     mImageView.setImageDrawable(Drawable.createFromStream(in, null));
