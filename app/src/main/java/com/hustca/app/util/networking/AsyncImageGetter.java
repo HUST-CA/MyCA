@@ -1,7 +1,7 @@
 package com.hustca.app.util.networking;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.hustca.app.R;
+import com.hustca.app.util.CachedImageCropper;
+import com.hustca.app.util.ImageCropper;
 
 import java.io.File;
 import java.io.InputStream;
@@ -16,7 +18,7 @@ import java.io.InputStream;
 
 /**
  * Created by Hamster on 2015/8/7.
- * <p/>
+ * <p>
  * Async image getter.
  * Can be used with ImageView.
  */
@@ -25,11 +27,11 @@ public class AsyncImageGetter {
 
     /**
      * Return a unique identifier for a url in cache
-     * <p/>
+     * <p>
      * Normally it's the file name in the URL.
      * If no file name is available, return the hashCode of the URL.
      *
-     * @param url          URL to get identifier
+     * @param url URL to get identifier
      * @return cache identifier
      */
     private static String getUrlIdentifier(String url) {
@@ -47,7 +49,7 @@ public class AsyncImageGetter {
      *
      * @param source URL
      */
-    public static void loadForImageView(ImageView imageView, String source) {
+    public static void loadForImageView(final ImageView imageView, String source) {
         if (null == imageView) {
             Log.e(LOG_TAG, "loadForImageView: mImageView is null. Returning.");
             return;
@@ -57,60 +59,107 @@ public class AsyncImageGetter {
             return;
         }
 
+        String originalCacheFileName = getUrlIdentifier(source);
+        String exactCacheFileName = originalCacheFileName +
+                "_" + imageView.getWidth() + "x" + imageView.getHeight();
         File cacheFile = new File(imageView.getContext().getExternalCacheDir(),
-                getUrlIdentifier(source));
+                exactCacheFileName);
         if (cacheFile.exists()) {
             imageView.setImageURI(Uri.fromFile(cacheFile));
             return;
+        } else {
+            cacheFile = new File(imageView.getContext().getExternalCacheDir(),
+                    originalCacheFileName);
+            if (cacheFile.exists()) {
+                ImageCropper.BitmapSource bitmapSource = new ImageCropper.BitmapSource();
+                bitmapSource.bitmapPath = cacheFile.getAbsolutePath();
+
+                ImageCropper.OnFinishListener listener = new ImageCropper.OnFinishListener() {
+                    @Override
+                    public void OnCropFinished(Bitmap bitmap) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                };
+                CachedImageCropper cropper = new CachedImageCropper(
+                        imageView.getHeight(),
+                        imageView.getWidth(),
+                        listener,
+                        cacheFile.getAbsolutePath() + "_" +
+                                imageView.getWidth() + "x" + imageView.getHeight());
+                cropper.execute(bitmapSource);
+                return;
+            }
         }
 
+        /* No cache hit, load from network */
         imageView.setBackgroundColor(imageView.getContext().
                 getResources().getColor(android.R.color.darker_gray));
-        AsyncLoaderForImageView loader = new AsyncLoaderForImageView(imageView);
+        RawImageLoader loader = new RawImageLoader(imageView);
         loader.execute(source);
     }
 
-    private static class AsyncLoaderForImageView extends CachedAsyncLoader {
+    /**
+     * Loads image from network and start another AsyncTask to crop it
+     */
+    private static class RawImageLoader extends CachedAsyncLoader {
         private ImageView mImageView;
-        private Context mContext;
+        private String mCachePath;
 
-        AsyncLoaderForImageView(ImageView iv) {
+        /**
+         * We will call another AsyncTask to crop it, and it will set
+         * the final bitmap, so we need the ImageView here.
+         *
+         * @param iv target ImageView
+         */
+        RawImageLoader(ImageView iv) {
             mImageView = iv;
-            mContext = iv.getContext();
         }
 
-        @Override
-        protected void onPostExecute(InputStream in) {
-            if (in == null) {
-                // TODO Use something sensible
-                mImageView.setBackgroundColor(mContext.getResources().
-                        getColor(android.R.color.darker_gray));
-            } else {
-                if (mImageView != null) {
-                    mImageView.setImageDrawable(Drawable.createFromStream(in, null));
-                }
-            }
+        private String getCacheDir() {
+            return mImageView.getContext().getExternalCacheDir().getAbsolutePath();
         }
 
         @Override
         protected String getCacheFileName(String source) {
-            return mContext.getExternalCacheDir().getAbsolutePath()
-                    + File.separator + getUrlIdentifier(source);
+            mCachePath = getCacheDir() + File.separator + getUrlIdentifier(source);
+            return mCachePath;
         }
 
         @Override
-        protected void exceptionHandler(final Exception e) {
+        protected void exceptionHandler(Exception e) {
             e.printStackTrace();
-            Handler handler = new Handler(mContext.getMainLooper());
+            final String desc = e.getLocalizedMessage();
+            final Context context = mImageView.getContext();
+            Handler handler = new Handler(context.getMainLooper());
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(mContext,
-                            mContext.getResources().getString(R.string.network_error)
-                                    + " " + e.getLocalizedMessage()
+                    Toast.makeText(context,
+                            context.getResources().getString(R.string.network_error)
+                                    + " " + desc
                             , Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        @Override
+        protected void onPostExecute(InputStream inputStream) {
+            super.onPostExecute(inputStream);
+            ImageCropper.BitmapSource bitmapSource = new ImageCropper.BitmapSource();
+            bitmapSource.bitmapInputStream = inputStream;
+
+            ImageCropper.OnFinishListener listener = new ImageCropper.OnFinishListener() {
+                @Override
+                public void OnCropFinished(Bitmap bitmap) {
+                    mImageView.setImageBitmap(bitmap);
+                }
+            };
+            CachedImageCropper cropper = new CachedImageCropper(
+                    mImageView.getHeight(),
+                    mImageView.getWidth(),
+                    listener,
+                    mCachePath);
+            cropper.execute(bitmapSource);
         }
     }
 }
