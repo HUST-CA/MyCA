@@ -56,7 +56,9 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
         cardViewHolder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
                 article.getPublishTime()));
         cardViewHolder.relatedArticle = article;
-        cardViewHolder.imageView.setImageResource(R.mipmap.ic_launcher);
+        cardViewHolder.imageView.setImageBitmap(null);
+        cardViewHolder.imageView.setBackgroundColor(mActivity.getResources().getColor(
+                android.R.color.darker_gray));
         cardViewHolder.imageView.post(new Runnable() {
             @Override
             public void run() {
@@ -127,7 +129,6 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
         TextView summaryText;
         TextView timeAndPlaceText;
         Article relatedArticle;
-        //ViewTreeObserver imageViewObserver;
 
         private View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -153,7 +154,6 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
             summaryText = (TextView) itemView.findViewById(R.id.text_card_summary);
             timeAndPlaceText = (TextView) itemView.findViewById(R.id.text_card_time);
             titleText = (TextView) itemView.findViewById(R.id.text_card_title);
-            //imageViewObserver = imageView.getViewTreeObserver();
             itemView.setOnClickListener(onClickListener);
         }
     }

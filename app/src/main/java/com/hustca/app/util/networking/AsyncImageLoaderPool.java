@@ -36,7 +36,10 @@ public class AsyncImageLoaderPool {
     public static void cancelAll(ImageView view) {
         ArrayList<AsyncImageLoader.RawImageLoader> loaders = getAll(view);
         for (AsyncImageLoader.RawImageLoader loader : loaders) {
-            /* Allow it to finish downloading. Just don't draw it */
+            /*
+             * Allow it to finish downloading in order to avoid corrupting cache.
+             * Just don't draw it.
+             */
             loader.cancel(false);
         }
     }
