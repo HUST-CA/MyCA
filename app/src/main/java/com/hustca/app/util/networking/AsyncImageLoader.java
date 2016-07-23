@@ -73,6 +73,8 @@ public class AsyncImageLoader {
             return;
         }
 
+        AsyncImageLoaderPool.cancelAll(imageView);
+
         Context context = imageView.getContext();
         int viewWidth = imageView.getWidth();
         int viewHeight = imageView.getHeight();
@@ -120,12 +122,13 @@ public class AsyncImageLoader {
                 getResources().getColor(android.R.color.darker_gray));
         RawImageLoader loader = new RawImageLoader(imageView, shouldResize);
         loader.execute(source);
+        AsyncImageLoaderPool.add(loader);
     }
 
     /**
      * Loads image from network and start another AsyncTask to crop it if needed
      */
-    private static class RawImageLoader extends CachedAsyncLoader {
+    public static class RawImageLoader extends CachedAsyncLoader {
         private ImageView mImageView;
         private String mCachePath;
         private boolean mShouldResize;
@@ -191,6 +194,9 @@ public class AsyncImageLoader {
                         ImageCacheUtil.getThumbnailFileName(mCachePath, width, height));
                 cropper.execute(bitmapSource);
             }
+            AsyncImageLoaderPool.remove(this);
         }
+
+        public ImageView getImageView() { return mImageView; }
     }
 }
