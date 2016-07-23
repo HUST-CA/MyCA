@@ -17,9 +17,9 @@ public class CachedImageCropper extends ImageCropper {
     private String mCachePath;
     private static final String TAG = "MyCA_CachedCropper";
 
-    public CachedImageCropper(int targetHeight, int targetWidth,
+    public CachedImageCropper(int targetWidth, int targetHeight,
                               ImageCropper.OnFinishListener listener, String cachePath) {
-        super(targetHeight, targetWidth, listener);
+        super(targetWidth, targetHeight, listener);
         mCachePath = cachePath;
     }
 
@@ -37,7 +37,7 @@ public class CachedImageCropper extends ImageCropper {
 
         try {
             FileOutputStream outStream = new FileOutputStream(thumb);
-            bmp.compress(Bitmap.CompressFormat.WEBP, 100, outStream);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
             outStream.flush();
             outStream.close();
         } catch (FileNotFoundException e) {

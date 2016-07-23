@@ -9,12 +9,13 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hustca.app.activities.NewsBrowserActivity;
 import com.hustca.app.fragments.NewsBrowserFragment;
-import com.hustca.app.util.networking.AsyncImageGetter;
+import com.hustca.app.util.networking.AsyncImageLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
+    public void onBindViewHolder(final CardViewHolder cardViewHolder, int i) {
         Article article = mArticles.get(i);
         cardViewHolder.titleText.setText(article.getTitle());
         cardViewHolder.summaryText.setText(Html.fromHtml(article.getSummary())
@@ -55,7 +56,14 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
         cardViewHolder.timeAndPlaceText.setText(SimpleDateFormat.getInstance().format(
                 article.getPublishTime()));
         cardViewHolder.relatedArticle = article;
-        AsyncImageGetter.loadForImageView(cardViewHolder.imageView, article.getCoverURL());
+        cardViewHolder.imageView.setImageResource(R.mipmap.ic_launcher);
+        cardViewHolder.imageView.post(new Runnable() {
+            @Override
+            public void run() {
+                AsyncImageLoader.loadForImageView(cardViewHolder.imageView,
+                        cardViewHolder.relatedArticle.getCoverURL());
+            }
+        });
     }
 
     @Override
@@ -119,6 +127,7 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
         TextView summaryText;
         TextView timeAndPlaceText;
         Article relatedArticle;
+        //ViewTreeObserver imageViewObserver;
 
         private View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -144,6 +153,7 @@ public class ArticleCardListAdapter extends RecyclerView.Adapter<ArticleCardList
             summaryText = (TextView) itemView.findViewById(R.id.text_card_summary);
             timeAndPlaceText = (TextView) itemView.findViewById(R.id.text_card_time);
             titleText = (TextView) itemView.findViewById(R.id.text_card_title);
+            //imageViewObserver = imageView.getViewTreeObserver();
             itemView.setOnClickListener(onClickListener);
         }
     }

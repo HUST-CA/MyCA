@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.hustca.app.R;
 import com.hustca.app.util.CachedImageCropper;
+import com.hustca.app.util.ImageCacheUtil;
 import com.hustca.app.util.ImageCropper;
 
 import java.io.File;
@@ -18,16 +19,16 @@ import java.io.InputStream;
 
 /**
  * Created by Hamster on 2015/8/7.
- * <p>
- * Async image getter.
+ * <p/>
+ * Async image loader.
  * Can be used with ImageView.
  */
-public class AsyncImageGetter {
+public class AsyncImageLoader {
     private static final String LOG_TAG = "MyCA_AsyncIMG";
 
     /**
      * Return a unique identifier for a url in cache
-     * <p>
+     * <p/>
      * Normally it's the file name in the URL.
      * If no file name is available, return the hashCode of the URL.
      *
@@ -41,17 +42,30 @@ public class AsyncImageGetter {
     }
 
     /**
+     * See {@link com.hustca.app.util.networking.AsyncImageLoader#loadForImageView(ImageView, String, boolean)}
+     * with shouldResize == true
+     */
+    public static void loadForImageView(final ImageView imageView, String source) {
+        loadForImageView(imageView, source, true);
+    }
+
+    /**
      * Load picture for ImageView.<br/>
      * This will check if it's already cached.
      * If so, no loading pic will be shown and the cached image is shown immediately.
      * If not, it will show a loading pic and refresh when loading finished.
-     * <em>Remember to initialize with ImageView</em>
      *
-     * @param source URL
+     * Note: if shouldResize is true, the imageView should be measured since we need
+     * its width and height. If shouldResize is false, there is no such requirement.
+     *
+     * @param imageView    view to operate on
+     * @param source       URL
+     * @param shouldResize whether we load a resized image so that fits the view
+     *                     or the original image
      */
-    public static void loadForImageView(final ImageView imageView, String source) {
+    public static void loadForImageView(final ImageView imageView, String source, boolean shouldResize) {
         if (null == imageView) {
-            Log.e(LOG_TAG, "loadForImageView: mImageView is null. Returning.");
+            Log.e(LOG_TAG, "loadForImageView: imageView is null. Returning.");
             return;
         }
         if (null == source) {
@@ -59,64 +73,77 @@ public class AsyncImageGetter {
             return;
         }
 
-        String originalCacheFileName = getUrlIdentifier(source);
-        String exactCacheFileName = originalCacheFileName +
-                "_" + imageView.getWidth() + "x" + imageView.getHeight();
-        File cacheFile = new File(imageView.getContext().getExternalCacheDir(),
-                exactCacheFileName);
-        if (cacheFile.exists()) {
-            imageView.setImageURI(Uri.fromFile(cacheFile));
-            return;
-        } else {
-            cacheFile = new File(imageView.getContext().getExternalCacheDir(),
-                    originalCacheFileName);
-            if (cacheFile.exists()) {
-                ImageCropper.BitmapSource bitmapSource = new ImageCropper.BitmapSource();
-                bitmapSource.bitmapPath = cacheFile.getAbsolutePath();
+        Context context = imageView.getContext();
+        int viewWidth = imageView.getWidth();
+        int viewHeight = imageView.getHeight();
 
-                ImageCropper.OnFinishListener listener = new ImageCropper.OnFinishListener() {
-                    @Override
-                    public void OnCropFinished(Bitmap bitmap) {
-                        imageView.setImageBitmap(bitmap);
-                    }
-                };
-                CachedImageCropper cropper = new CachedImageCropper(
-                        imageView.getHeight(),
-                        imageView.getWidth(),
-                        listener,
-                        cacheFile.getAbsolutePath() + "_" +
-                                imageView.getWidth() + "x" + imageView.getHeight());
-                cropper.execute(bitmapSource);
+        String originalCacheFileName = getUrlIdentifier(source);
+        String exactCacheFileName = ImageCacheUtil.getThumbnailFileName(
+                originalCacheFileName, viewWidth, viewHeight);
+
+        File exactCacheFile = new File(ImageCacheUtil.getCacheDir(context),
+                exactCacheFileName);
+        File originalCacheFile = new File(ImageCacheUtil.getCacheDir(context),
+                originalCacheFileName);
+
+        if (exactCacheFile.exists()) {
+            imageView.setImageURI(Uri.fromFile(exactCacheFile));
+            return;
+        } else if (originalCacheFile.exists()) {
+            if (!shouldResize) {
+                imageView.setImageURI(Uri.fromFile(originalCacheFile));
                 return;
             }
+
+            /* Original image exists, just need to resize it */
+            ImageCropper.BitmapSource bitmapSource = new ImageCropper.BitmapSource();
+            bitmapSource.bitmapPath = originalCacheFile.getAbsolutePath();
+
+            ImageCropper.OnFinishListener listener = new ImageCropper.OnFinishListener() {
+                @Override
+                public void OnCropFinished(Bitmap bitmap) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            };
+            CachedImageCropper cropper = new CachedImageCropper(
+                    viewWidth,
+                    viewHeight,
+                    listener,
+                    exactCacheFileName);
+            cropper.execute(bitmapSource);
+            return;
         }
 
         /* No cache hit, load from network */
+        imageView.setImageBitmap(null);
         imageView.setBackgroundColor(imageView.getContext().
                 getResources().getColor(android.R.color.darker_gray));
-        RawImageLoader loader = new RawImageLoader(imageView);
+        RawImageLoader loader = new RawImageLoader(imageView, shouldResize);
         loader.execute(source);
     }
 
     /**
-     * Loads image from network and start another AsyncTask to crop it
+     * Loads image from network and start another AsyncTask to crop it if needed
      */
     private static class RawImageLoader extends CachedAsyncLoader {
         private ImageView mImageView;
         private String mCachePath;
+        private boolean mShouldResize;
 
         /**
          * We will call another AsyncTask to crop it, and it will set
          * the final bitmap, so we need the ImageView here.
          *
-         * @param iv target ImageView
+         * @param iv           target ImageView
+         * @param shouldResize shall we resize to fit ImageView after downloading
          */
-        RawImageLoader(ImageView iv) {
+        RawImageLoader(ImageView iv, boolean shouldResize) {
             mImageView = iv;
+            mShouldResize = shouldResize;
         }
 
         private String getCacheDir() {
-            return mImageView.getContext().getExternalCacheDir().getAbsolutePath();
+            return ImageCacheUtil.getCacheDir(mImageView.getContext()).getAbsolutePath();
         }
 
         @Override
@@ -154,12 +181,16 @@ public class AsyncImageGetter {
                     mImageView.setImageBitmap(bitmap);
                 }
             };
-            CachedImageCropper cropper = new CachedImageCropper(
-                    mImageView.getHeight(),
-                    mImageView.getWidth(),
-                    listener,
-                    mCachePath);
-            cropper.execute(bitmapSource);
+            if (mShouldResize) {
+                int width = mImageView.getWidth();
+                int height = mImageView.getHeight();
+                CachedImageCropper cropper = new CachedImageCropper(
+                        width,
+                        height,
+                        listener,
+                        ImageCacheUtil.getThumbnailFileName(mCachePath, width, height));
+                cropper.execute(bitmapSource);
+            }
         }
     }
 }

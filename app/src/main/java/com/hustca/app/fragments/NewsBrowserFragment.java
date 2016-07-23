@@ -18,7 +18,7 @@ import android.widget.ImageView;
 
 import com.hustca.app.Article;
 import com.hustca.app.R;
-import com.hustca.app.util.networking.AsyncImageGetter;
+import com.hustca.app.util.networking.AsyncImageLoader;
 
 /**
  * Created by Hamster on 2015/8/2.
@@ -71,17 +71,29 @@ public class NewsBrowserFragment extends Fragment {
             return;
         }
 
-        mHeaderImageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        /*mHeaderImageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 mHeaderImageView.getViewTreeObserver().removeOnPreDrawListener(this);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getActivity().startPostponedEnterTransition();
                 }
+                AsyncImageLoader.loadForImageView(mHeaderImageView, article.getCoverURL());
                 return true;
             }
+        });*/
+
+        mHeaderImageView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().startPostponedEnterTransition();
+                }
+            }
         });
-        AsyncImageGetter.loadForImageView(mHeaderImageView, article.getCoverURL());
+
+        /* false is needed to prevent showing an loading icon during transition */
+        AsyncImageLoader.loadForImageView(mHeaderImageView, article.getCoverURL(), false);
 
         mCollapsingToolbar.setTitle(article.getTitle());
         // TODO Do we need to change the colors according to picture?

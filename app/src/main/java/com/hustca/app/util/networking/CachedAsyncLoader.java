@@ -20,9 +20,8 @@ public abstract class CachedAsyncLoader extends AsyncLoader {
 
     /**
      * Bytes to copy at once from Internet to cache file.
-     * Only override this in sub class. No method to change this.
      */
-    private static int mBufferSize = 1024;
+    private static final int BUFFER_SIZE = 1024;
 
     /**
      * Return a cache file path for a URL.<p/>
@@ -67,7 +66,7 @@ public abstract class CachedAsyncLoader extends AsyncLoader {
             return in; // still return this for later use.
         }
 
-        byte[] buffer = new byte[mBufferSize];
+        byte[] buffer = new byte[BUFFER_SIZE];
         int len;
         try {
             while ((len = in.read(buffer)) != -1) {

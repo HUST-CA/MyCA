@@ -22,7 +22,7 @@ public class ImageCropper extends AsyncTask<ImageCropper.BitmapSource, Void, Bit
     private OnFinishListener mOnFinishListener;
     private static final String TAG = "MyCA_ImageCropper";
     
-    public ImageCropper(int targetHeight, int targetWidth, OnFinishListener listener) {
+    public ImageCropper(int targetWidth, int targetHeight, OnFinishListener listener) {
         mTargetHeight = targetHeight;
         mTargetWidth = targetWidth;
         mOnFinishListener = listener;
@@ -84,12 +84,12 @@ public class ImageCropper extends AsyncTask<ImageCropper.BitmapSource, Void, Bit
         /* Make it exact */
         imgWidth = options.outWidth;
         imgHeight = options.outHeight;
-        float exactHeightRatio = (float) imgHeight / mTargetHeight;
-        float exactWidthRatio = (float) imgWidth / mTargetWidth;
-        float exactRatio = Math.min(exactHeightRatio, exactWidthRatio);
+        float exactHeightRatio = (float) mTargetHeight / imgHeight;
+        float exactWidthRatio = (float) mTargetWidth / imgWidth;
+        float exactRatio = Math.max(exactHeightRatio, exactWidthRatio);
         Matrix resizeMat = new Matrix();
         resizeMat.postScale(exactRatio, exactRatio);
-        return Bitmap.createBitmap(roughBmp, 0, 0, mTargetWidth, mTargetHeight, resizeMat, false);
+        return Bitmap.createBitmap(roughBmp, 0, 0, (int)(mTargetWidth / exactRatio), (int)(mTargetHeight / exactRatio), resizeMat, false);
     }
 
     @Override
