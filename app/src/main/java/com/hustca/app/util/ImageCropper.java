@@ -89,7 +89,12 @@ public class ImageCropper extends AsyncTask<ImageCropper.BitmapSource, Void, Bit
         float exactRatio = Math.max(exactHeightRatio, exactWidthRatio);
         Matrix resizeMat = new Matrix();
         resizeMat.postScale(exactRatio, exactRatio);
-        return Bitmap.createBitmap(roughBmp, 0, 0, (int)(mTargetWidth / exactRatio), (int)(mTargetHeight / exactRatio), resizeMat, false);
+
+        int actualWidth = (int) (mTargetWidth / exactRatio);
+        int actualHeight = (int) (mTargetHeight / exactRatio);
+        int startX = (imgWidth - actualWidth) / 2;
+        int startY = (imgHeight - actualHeight) / 2;
+        return Bitmap.createBitmap(roughBmp, startX, startY, actualWidth, actualHeight, resizeMat, false);
     }
 
     @Override
