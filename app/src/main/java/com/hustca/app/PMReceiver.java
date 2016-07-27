@@ -53,7 +53,7 @@ public class PMReceiver extends BroadcastReceiver {
                 .setContentText(msg)
                 .setDefaults(defaults)
                 .setAutoCancel(true)
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.drawable.ic_stat_notification);
         nm.notify(0, builder.getNotification());
     }
 }
