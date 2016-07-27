@@ -50,6 +50,7 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/action_settings"
+            android:theme="@style/AppTheme.SolidStatusBar"
             android:parentActivityName=".activities.MainActivity">
 
             <meta-data
