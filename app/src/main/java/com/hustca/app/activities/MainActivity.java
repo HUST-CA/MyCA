@@ -164,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(final MenuItem menuItem) {
                 final int id = menuItem.getItemId();
 
-                menuItem.setChecked(true);
-
                 // Give the drawer 235ms to retract or it may cause glitch even on 3GB RAM with S801AC
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
@@ -174,15 +172,19 @@ public class MainActivity extends AppCompatActivity {
                         switch (id) {
                             case R.id.menu_recent_act:
                                 fragToSwitch = FragmentType.FRAGMENT_RECENT_ACTIVITIES;
+                                menuItem.setChecked(true);
                                 break;
                             case R.id.menu_history:
                                 fragToSwitch = FragmentType.FRAGMENT_HISTORY;
+                                menuItem.setChecked(true);
                                 break;
                             case R.id.menu_news:
                                 fragToSwitch = FragmentType.FRAGMENT_NEWS;
+                                menuItem.setChecked(true);
                                 break;
                             case R.id.menu_h2o:
                                 fragToSwitch = FragmentType.FRAGMENT_BBS;
+                                menuItem.setChecked(true);
                                 break;
                     /* Following can't be handled with FragmentType */
                             case R.id.menu_settings:
