@@ -3,17 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:id="@+id/status_bar_stub"
+            android:translationZ="5dp"
+            android:background="?attr/colorPrimaryDark" />
+
         <!-- Toolbar to replace ActionBar -->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            android:layout_below="@id/status_bar_stub"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
